@@ -32,10 +32,14 @@ PRODUCT_PACKAGES := \
     Gallery2 \
     LatinIME \
     Launcher2 \
-    Music \
+    MusicFX \
+    MusicVisualization \
+    NoiseField \
     Provision \
+    PhaseBeam \
     Phone \
     QuickSearchBox \
+    ROMControl \
     Settings \
     Sync \
     SystemUI \
