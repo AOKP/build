@@ -58,6 +58,9 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
 
   --override_device <device>
       Override device-specific asserts. Can be a comma-separated list.
+   
+  --no-assert <true|false>
+	  Including this will turn device asserts off.
 
 """
 
@@ -97,6 +100,7 @@ OPTIONS.aslr_mode = True
 OPTIONS.worker_threads = 3
 OPTIONS.backuptool = False
 OPTIONS.override_device = 'auto'
+OPTIONS.no_assert = False
 
 def MostPopularKey(d, default):
   """Given a dict, return the key corresponding to the largest
@@ -393,8 +397,9 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #  ts = GetBuildProp("ro.build.date.utc", input_zip)
   #  script.AssertOlderBuild(ts)
 
-  AppendAssertions(script, input_zip)
-  device_specific.FullOTA_Assertions()
+  if not OPTIONS.no_assert:
+	AppendAssertions(script, input_zip)
+	device_specific.FullOTA_Assertions()
   if OPTIONS.backuptool:
     script.RunBackup("backup")
 
@@ -574,8 +579,9 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
   #  0.8 for applying patches (ApplyPatch calls)
   #  0.1 for unpacking verbatim files, symlinking, and doing the
   #      device-specific commands.
-
-  AppendAssertions(script, target_zip)
+  
+  if OPTIONS.no_assert:
+	AppendAssertions(script, target_zip)
   device_specific.IncrementalOTA_Assertions()
 
   script.Print("Verifying current system...")
@@ -767,6 +773,11 @@ def main(argv):
       OPTIONS.omit_prereq = True
     elif o in ("-e", "--extra_script"):
       OPTIONS.extra_script = a
+    elif o in ("--no-assert"):
+      if a in ("on", "On", "true", "True", "yes", "Yes"):
+        OPTIONS.no_assert = True
+      else:
+        OPTIONS.no_assert = False
     elif o in ("-a", "--aslr_mode"):
       if a in ("on", "On", "true", "True", "yes", "Yes"):
         OPTIONS.aslr_mode = True
@@ -786,6 +797,7 @@ def main(argv):
                              extra_opts="b:k:i:d:wne:a:",
                              extra_long_opts=["board_config=",
                                               "package_key=",
+                                              "no-assert=",
                                               "incremental_from=",
                                               "wipe_user_data",
                                               "no_prereq",
