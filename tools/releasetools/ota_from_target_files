@@ -59,7 +59,7 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
   --override_device <device>
       Override device-specific asserts. Can be a comma-separated list.
    
-  --no-assert <true|false>
+  --no_assert <true|false>
 	  Including this will turn device asserts off.
 
 """
@@ -398,8 +398,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #  script.AssertOlderBuild(ts)
 
   if not OPTIONS.no_assert:
-	AppendAssertions(script, input_zip)
-	device_specific.FullOTA_Assertions()
+    AppendAssertions(script, input_zip)
+    device_specific.FullOTA_Assertions()
   if OPTIONS.backuptool:
     script.RunBackup("backup")
 
@@ -581,7 +581,7 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
   #      device-specific commands.
   
   if OPTIONS.no_assert:
-	AppendAssertions(script, target_zip)
+     AppendAssertions(script, target_zip)
   device_specific.IncrementalOTA_Assertions()
 
   script.Print("Verifying current system...")
@@ -773,7 +773,7 @@ def main(argv):
       OPTIONS.omit_prereq = True
     elif o in ("-e", "--extra_script"):
       OPTIONS.extra_script = a
-    elif o in ("--no-assert"):
+    elif o in ("--no_assert"):
       if a in ("on", "On", "true", "True", "yes", "Yes"):
         OPTIONS.no_assert = True
       else:
@@ -797,7 +797,7 @@ def main(argv):
                              extra_opts="b:k:i:d:wne:a:",
                              extra_long_opts=["board_config=",
                                               "package_key=",
-                                              "no-assert=",
+                                              "no_assert=",
                                               "incremental_from=",
                                               "wipe_user_data",
                                               "no_prereq",
