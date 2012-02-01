@@ -1260,10 +1260,10 @@ else
     $(INTERNAL_OTA_PACKAGE_TARGET): override_device := $(TARGET_OTA_ASSERT_DEVICE)
 endif
 
-ifeq ($(TARGET_OTA_ASSERT_SKIP),)
-    $(INTERNAL_OTA_PACKAGE_TARGET): skip_assert := false
-else
+ifeq ($(TARGET_OTA_ASSERT_SKIP),true)
     $(INTERNAL_OTA_PACKAGE_TARGET): skip_assert := true
+else
+    $(INTERNAL_OTA_PACKAGE_TARGET): skip_assert := false
 endif
 
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(OTATOOLS)
