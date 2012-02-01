@@ -59,16 +59,15 @@ function check_product()
 
     if (echo -n $1 | grep -q -e "^aokp_") ; then
        AOKP_BUILD=$(echo -n $1 | sed -e 's/^aokp_//g')
+       NAM_VARIANT=$(echo -n $1 | sed -e 's/^aokp_//g')
+    elif (echo -n $1 | grep -q -e "htc_") ; then
+       AOKP_BUILD=
+       NAM_VARIANT=$(echo -n $1)
     else
        AOKP_BUILD=
+       NAM_VARIANT=
     fi
     export AOKP_BUILD
-
-    if (echo -n $1 | grep -q -e "htc_") ; then
-        NAM_VARIANT=$(echo -n $1)
-    else
-        NAM_VARIANT=
-    fi
     export NAM_VARIANT
 
     CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core \
