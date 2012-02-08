@@ -20,7 +20,6 @@
 # entirely appropriate to inherit from for on-device configurations.
 
 PRODUCT_PACKAGES := \
-    VoiceDialer \
     stk
 
 PRODUCT_PROPERTY_OVERRIDES := \

@@ -38,7 +38,6 @@ PRODUCT_PACKAGES := \
     Provision \
     PhaseBeam \
     Phone \
-    QuickSearchBox \
     ROMControl \
     Settings \
     Sync \
