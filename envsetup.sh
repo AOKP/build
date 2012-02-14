@@ -550,7 +550,10 @@ function lunch()
         echo
         return 1
     fi
-
+    
+    local build_device=$(echo $product | sed -e "s/^[^\-]*_//")
+	
+	export TARGET_BUILD_DEVICE=$build_device
     export TARGET_PRODUCT=$product
     export TARGET_BUILD_VARIANT=$variant
     export TARGET_BUILD_TYPE=release
