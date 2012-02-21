@@ -36,7 +36,6 @@ PRODUCT_PACKAGES := \
     MusicVisualization \
     NoiseField \
     Provision \
-    PhaseBeam \
     Phone \
     ROMControl \
     Settings \
