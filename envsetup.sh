@@ -56,12 +56,12 @@ function check_product()
         return
     fi
 
-    if (echo -n $1 | grep -q -e "^cm_") ; then
-       CM_BUILD=$(echo -n $1 | sed -e 's/^cm_//g')
+    if (echo -n $1 | grep -q -e "^aokp_") ; then
+       AOKP_BUILD=$(echo -n $1 | sed -e 's/^aokp_//g')
     else
-       CM_BUILD=
+       AOKP_BUILD=
     fi
-    export CM_BUILD
+    export AOKP_BUILD
 
     CALLED_FROM_SETUP=true BUILD_SYSTEM=build/core \
         TARGET_PRODUCT=$1 \
@@ -516,15 +516,15 @@ function lunch()
     local product=$(echo -n $selection | sed -e "s/-.*$//")
     check_product $product
     if [ $? -ne 0 ]
-    then
-        # if we can't find a product, try to grab it off the CM github
-        T=$(gettop)
-        pushd $T > /dev/null
-        build/tools/roomservice.py $product
-        popd > /dev/null
-        check_product $product
-    fi
-    if [ $? -ne 0 ]
+#    then
+#        # if we can't find a product, try to grab it off the AOKP github
+#        T=$(gettop)
+#        pushd $T > /dev/null
+#        build/tools/roomservice.py $product
+#        popd > /dev/null
+#        check_product $product
+#    fi
+#    if [ $? -ne 0 ]
     then
         echo
         echo "** Don't have a product spec for: '$product'"
