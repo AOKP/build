@@ -3,6 +3,7 @@
 ###########################################################
 
 LOCAL_MODULE:=
+LOCAL_MODULE_NAME:=
 LOCAL_MODULE_PATH:=
 LOCAL_MODULE_STEM:=
 LOCAL_DONT_CHECK_MODULE:=

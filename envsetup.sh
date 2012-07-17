@@ -416,9 +416,6 @@ function add_lunch_combo()
 }
 
 # add the default one here
-add_lunch_combo full-eng
-add_lunch_combo full_x86-eng
-add_lunch_combo vbox_x86-eng
 
 function print_lunch_menu()
 {
