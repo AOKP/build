@@ -28,16 +28,22 @@
   <div class="morehover" id="moremenu">
     <div class="top"></div>
     <div class="mid">
+      <div class="header">Links</div>
+      <ul>
+        <li><a href="https://play.google.com/apps/publish/">Google Play Developer Console</a></li>
+        <li><a href="http://android-developers.blogspot.com/">Android Developers Blog</a></li>
+        <li><a href="<?cs var:toroot ?>about/index.html">About Android</a></li>
+      </ul>
       <div class="header">Android Sites</div>
       <ul>
         <li><a href="http://www.android.com">Android.com</a></li>
         <li class="active"><a>Android Developers</a></li>
         <li><a href="http://source.android.com">Android Open Source Project</a></li>
       </ul>
-      <div class="header">Support</div>
+      <!-- <div class="header">Support</div>
       <ul>
         <li><a href="<?cs var:toroot ?>support.html">Developer Support</a></li>
-      </ul>
+      </ul> -->
       <div class="header">Languages</div>
         <div id="language" class="locales">
           <select name="language" onChange="changeLangPref(this.value, true)">
@@ -66,8 +72,8 @@
       <form onsubmit="return submit_search()">
         <input id="search_autocomplete" type="text" value="" autocomplete="off" name="q"
 onfocus="search_focus_changed(this, true)" onblur="search_focus_changed(this, false)"
-onkeydown="return search_changed(event, true, '/')" onkeyup="return search_changed(event, false,
-'/')" />
+onkeydown="return search_changed(event, true, '<?cs var:toroot ?>')" 
+onkeyup="return search_changed(event, false, '<?cs var:toroot ?>')" />
       </form>
       <div class="right"></div>
         <a class="close hide">close</a>
