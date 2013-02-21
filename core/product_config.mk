@@ -185,16 +185,16 @@ ifneq ($(strip $(TARGET_BUILD_APPS)),)
 all_product_configs := $(call get-product-makefiles,\
     $(SRC_TARGET_DIR)/product/AndroidProducts.mk)
 else
-  ifneq ($(AOKP_PRODUCT),)
-    all_product_configs := $(shell ls vendor/aokp/products/${AOKP_PRODUCT}.mk)
+  ifneq ($(AOKP_TARGET),)
+    all_product_configs := $(shell ls vendor/aokp/products/$(AOKP_TARGET).mk)
   else
     # Read in all of the product definitions specified by the AndroidProducts.mk
     # files in the tree.
     all_product_configs := $(get-all-product-makefiles)
-  endif # AOKP_PRODUCT
+  endif # AOKP_TARGET
 endif
 
-ifeq ($(AOKP_PRODUCT),)
+ifeq ($(AOKP_TARGET),)
 # Find the product config makefile for the current product.
 # all_product_configs consists items like:
 # <product_name>:<path_to_the_product_makefile>
@@ -231,7 +231,7 @@ $(call import-products, $(all_product_makefiles))
 else
 # Import just the current product.
 ifndef current_product_makefile
-$(error Can not locate config makefile for product "$(TARGET_PRODUCT)")
+$(error Cannot locate config makefile for product "$(TARGET_PRODUCT)")
 endif
 ifneq (1,$(words $(current_product_makefile)))
 $(error Product "$(TARGET_PRODUCT)" ambiguous: matches $(current_product_makefile))
