@@ -397,9 +397,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
       info_dict=OPTIONS.info_dict)
 
   if not OPTIONS.no_assert:
-    #AppendAssertions(script, OPTIONS.info_dict)
-	device_specific.FullOTA_Assertions()
-
+  AppendAssertions(script, OPTIONS.info_dict)
+  device_specific.FullOTA_Assertions()
   device_specific.FullOTA_InstallBegin()
 
   script.ShowProgress(0.5, 0)
