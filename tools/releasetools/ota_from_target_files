@@ -408,6 +408,23 @@ def WriteFullOTAPackage(input_zip, output_zip):
     script.FormatPartition("/data")
 
   script.Print("**************************************");
+  script.Print("*              qgg  Mp               *");
+  script.Print("*          _pg_J000000g_gg           *");
+  script.Print("*          ]000M~~~~2M000#           *");
+  script.Print("*       'wp,00Mpg000Z_  ~00gg,       *");
+  script.Print("*       *@M0Nq00000000Z_pM00@        *");
+  script.Print("*        ## @000000000NB0pJ0p        *");
+  script.Print("*      #M0'  MM0000M000&M0M&#Mc      *");
+  script.Print("*      M00   0000000M000&#&jQ0'      *");
+  script.Print("*       #0   !000~]#f0000MMN0        *");
+  script.Print("*      N00   [00& ]& B000M&]B0r      *");
+  script.Print("*      #M0f  #BF@ 0!]0000#000M       *");
+  script.Print("*        #0   ~'_##]0000Q000'        *");
+  script.Print("*       *00&,  y0f_0000Z000N&        *");
+  script.Print("*        P~M0gj0fg000MM00M~MM        *");
+  script.Print("*          ]000000000007Q&           *");
+  script.Print("*           M'`M00MM00^ 9^           *");
+  script.Print("*              ~Mf  MM               *");
   script.Print("*  ______  _____   __  __   _____    *");
   script.Print("* /\\  _  \\/\\  __`\\/\\ \\/\\ \\ /\\  _ `\\  *");
   script.Print("* \\ \\ \\L\\ \\ \\ \\/\\ \\ \\ \\/'/'\\ \\ \\L\\ \\ *");
@@ -415,6 +432,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
   script.Print("*   \\ \\ \\/\\ \\ \\ \\_\\ \\ \\ \\\\\\`\\ \\ \\ \\/  *");
   script.Print("*    \\ \\_\\ \\_\\ \\_____\\ \\_\\ \\_\\\\\\ \\_\\  *");
   script.Print("*     \\/_/\\/_/\\/_____/\\/_/\\/_/ \\/_/  *");
+  script.Print("*                                    *");
   script.Print("**************************************");
 
   if "selinux_fc" in OPTIONS.info_dict:
