@@ -16,6 +16,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mbot:     Builds for all devices using the psuedo buildbot
 - mkapush:  Same as mka with the addition of adb pushing to the device.
 - pstest:   cherry pick a patch from the AOKP gerrit instance.
+- pspush:   push commit to AOKP gerrit instance.
 - taco:     Builds for a single device using the pseudo buildbot
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
 
@@ -1320,6 +1321,33 @@ function pstest() {
         patch="$1"
         submission=`echo $patch | cut -f1 -d "/" | tail -c 3`
         git fetch http://$gerrit/$project refs/changes/$submission/$patch && git cherry-pick FETCH_HEAD
+    fi
+}
+
+function pspush_error() {
+        echo "Requires ~/.ssh/config setup with the the following info:"
+        echo "      Host gerrit"
+        echo "        HostName gerrit.aokp.co"
+        echo "        User <your username>"
+        echo "        Port 29418"
+}
+
+function pspush() {
+    if [ -z "$1" ] || [ "$1" = '--help' ]; then
+        echo "pspush"
+        echo "to use:  pspush STATUS"
+        echo "where STATUS: for=regular; drafts=draft; heads=pushed to github"
+        echo "example: pspush for"
+    else
+        checkSshConfig=` grep -rH "gerrit.aokp.co" ~/.ssh/config `
+        if [ "$checkSshConfig" != "" ]; then
+            gerrit=gerrit.aokp.co
+            project=` git config --get remote.aokp.projectname`
+            status="$1"
+            git push gerrit:/$project HEAD:refs/$status/jb-mr1
+        else
+            pspush_error
+        fi
     fi
 }
 
