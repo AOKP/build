@@ -238,6 +238,10 @@ function settitle()
 
 function addcompletions()
 {
+    if [ "$(uname)" = "Darwin" ] ; then
+        return
+    fi
+
     local T dir f
 
     # Keep us from trying to run in something that isn't bash.
