@@ -25,6 +25,8 @@ PRODUCT_PACKAGES += \
     Browser \
     Contacts \
     ContactsProvider \
+    CSLauncher \
+    CSPanel \
     DefaultContainerService \
     DownloadProvider \
     DownloadProviderUi \
