@@ -1315,7 +1315,7 @@ function pstest() {
         echo "to use: pstest PATCH_ID/PATCH_SET"
         echo "example: pstest 5555/5"
     else
-        gerrit=gerrit.sudoservers.com
+        gerrit=gerrit.aokp.co
         project=`git config --get remote.aokp.projectname`
         patch="$1"
         submission=`echo $patch | cut -f1 -d "/" | tail -c 3`
