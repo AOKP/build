@@ -225,6 +225,38 @@ class EdifyGenerator(object):
       else:
         raise ValueError("don't know how to write \"%s\" partitions" % (p.fs_type,))
 
+  def PatchLokiImage(self, loki, aboot, in, out):
+    """Run loki_patch with aboot.img on the compiled
+    boot.img to produce a boot.lok for WriteLokiImage
+    Credit @djrbliss"""
+
+    args = {'loki': loki, 'aboot': aboot, 'in': in, 'out': out}
+
+    self.script.append(
+        'package_extract_file("%(loki)s, "/tmp/%(loki)s"); \n'
+        'package_extract_file("%(aboot)s, "/tmp/%(aboot)s"); \n'
+        'package_extract_file("%(in)s, "/tmp/%(in)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(loki)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(aboot)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(in)s"); \n'
+        'run_program("/tmp/%(loki)s", "boot", "/tmp/%(aboot)s", "/tmp/%(in)s, "/tmp/%(out)s"); \n'
+        'delete("/tmp/%(loki)s"); \n'
+        'delete("/tmp/%(aboot)s"); % args)
+
+  def WriteLokiImage(self, loki, boot):
+    """Run loki_flash on the boot.lok image for ATT & VZW jflte devices to 
+    bypass secure boot."""
+
+    args = {'loki': loki, 'boot': boot}
+
+    self.script.append(
+        'package_extract_file("%(loki)s", "/tmp/%(loki)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(loki)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(boot)s"); \n'           
+        'run_program("/tmp/%(loki)s", "boot", "/tmp/%(boot)s"); \n'
+        'delete("/tmp/%(loki)s"); \n'
+        'delete("/tmp/%(boot)s");' % args) 
+
   def SetPermissions(self, fn, uid, gid, mode):
     """Set file ownership and permissions."""
     self.script.append('set_perm(%d, %d, 0%o, "%s");' % (uid, gid, mode, fn))
