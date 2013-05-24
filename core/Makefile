@@ -1310,6 +1310,12 @@ else
     $(INTERNAL_OTA_PACKAGE_TARGET): persist := true
 endif
 
+ifeq($(TARGET_USES_LOKI),true)
+    $(INTERNAL_OTA_PACKAGE_TARGET): loki := true
+else
+    $(INTERNAL_OTA_PACKAGE_TARGET): loki := false
+endif
+
 $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	@echo "Package OTA: $@"
 	$(OTA_FROM_TARGET_SCRIPT) -v \
