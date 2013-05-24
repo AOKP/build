@@ -61,6 +61,10 @@ Usage:  ota_from_target_files [flags] input_target_files output_ota_package
   --no_assert <true|false>
       Including this will turn device asserts off.
 
+  --loki <true|false>
+      Specify whether to run loki_patch and flash to boot.img (off by default).
+      Credit @djrbliss for creating the tools
+
 """
 
 import sys
@@ -100,6 +104,7 @@ OPTIONS.worker_threads = 3
 OPTIONS.override_device = 'auto'
 OPTIONS.persist = True
 OPTIONS.no_assert = False
+OPTIONS.loki = False
 
 def MostPopularKey(d, default):
   """Given a dict, return the key corresponding to the largest
@@ -485,7 +490,11 @@ def WriteFullOTAPackage(input_zip, output_zip):
   script.ShowProgress(0.2, 0)
 
   script.ShowProgress(0.2, 10)
-  script.WriteRawImage("/boot", "boot.img")
+
+  if OPTIONS.loki:
+      script.WriteLokiImage("loki_flash", "boot.lok")
+  else:
+      script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.1, 0)
   device_specific.FullOTA_InstallEnd()
@@ -821,6 +830,11 @@ def main(argv):
       OPTIONS.override_device = a
     elif o in ("--persist"):
       OPTIONS.persist = a
+    elif o in ("--loki"):
+      if a in ("true", "True"):
+        OPTIONS.loki = True
+      else:
+        OPTIONS.loki = False
     elif o in ("--worker_threads"):
       OPTIONS.worker_threads = int(a)
     else:
@@ -840,6 +854,7 @@ def main(argv):
                                               "aslr_mode=",
                                               "override_device=",
                                               "persist=",
+                                              "loki=",
                                               ],
                              extra_option_handler=option_handler)
 

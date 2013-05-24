@@ -225,6 +225,21 @@ class EdifyGenerator(object):
       else:
         raise ValueError("don't know how to write \"%s\" partitions" % (p.fs_type,))
 
+  def WriteLokiImage(self, loki, boot):
+    """Run loki_flash on the boot.lok image for ATT & VZW jflte devices to
+    bypass secure boot."""
+
+    args = {'loki': loki, 'boot': boot}
+
+    self.script.append(
+        'package_extract_file("%(loki)s", "/tmp/%(loki)s"); \n'
+        'package_extract_file("%(boot)s", "/tmp/%(boot)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(loki)s"); \n'
+        'set_perm(0, 0, 0755, "/tmp/%(boot)s"); \n'
+        'run_program("/tmp/%(loki)s", "boot", "/tmp/%(boot)s"); \n'
+        'delete("/tmp/%(loki)s"); \n'
+        'delete("/tmp/%(boot)s");' % args)
+
   def SetPermissions(self, fn, uid, gid, mode):
     """Set file ownership and permissions."""
     self.script.append('set_perm(%d, %d, 0%o, "%s");' % (uid, gid, mode, fn))
