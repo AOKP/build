@@ -264,7 +264,7 @@ ifeq ($(HOST_OS),darwin)
 # leave this blank
 HOST_JDK_TOOLS_JAR :=
 else
-HOST_JDK_TOOLS_JAR:= $(shell $(BUILD_SYSTEM)/find-jdk-tools-jar.sh)
+HOST_JDK_TOOLS_JAR:= $(shell (sh $(BUILD_SYSTEM)/find-jdk-tools-jar.sh))
 ifeq ($(wildcard $(HOST_JDK_TOOLS_JAR)),)
 $(error Error: could not find jdk tools.jar, please install JDK6, \
     which you can download from java.sun.com)
