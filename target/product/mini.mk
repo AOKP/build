@@ -61,7 +61,6 @@ PRODUCT_PACKAGES += \
     TelephonyProvider \
     UserDictionaryProvider \
     apache-xml \
-    audio \
     bouncycastle \
     bu \
     cacerts \
@@ -138,11 +137,8 @@ PRODUCT_PACKAGES += \
     libwilhelm \
     libz \
     mdnsd \
-    network \
-    pand \
     requestsync \
     screencap \
-    sdptool \
     sensorservice \
     lint \
     telephony-common \
