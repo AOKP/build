@@ -40,19 +40,14 @@ PRODUCT_PACKAGES := \
     Settings \
     SystemUI \
     CalendarProvider \
-    bluetooth-health \
     hostapd \
     wpa_supplicant.conf
 
 PRODUCT_PACKAGES += \
-    audio \
     clatd \
     clatd.conf \
     dhcpcd.conf \
-    network \
-    pand \
     pppd \
-    sdptool \
     wpa_supplicant
 
 PRODUCT_PACKAGES += \
