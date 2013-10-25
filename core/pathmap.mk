@@ -46,7 +46,6 @@ pathmap_INCL := \
     libthread_db:bionic/libthread_db/include \
     mkbootimg:system/core/mkbootimg \
     opengl-tests-includes:frameworks/native/opengl/tests/include \
-    recovery:bootable/recovery \
     system-core:system/core/include \
     audio-effects:system/media/audio_effects/include \
     audio-utils:system/media/audio_utils/include \
@@ -54,6 +53,17 @@ pathmap_INCL := \
     wilhelm:frameworks/wilhelm/include \
     wilhelm-ut:frameworks/wilhelm/src/ut \
     speex:external/speex/include
+
+
+#Build recovery from bootable/recovery-twrp if device wants to use TWRP instead of CWM
+ifeq ($(TARGET_RECOVERY_VARIANT),twrp)
+pathmap_INCL += \
+    recovery:bootable/recovery-twrp
+else
+pathmap_INCL += \
+    recovery:bootable/recovery
+endif
+
 
 #
 # Returns the path to the requested module's include directory,
