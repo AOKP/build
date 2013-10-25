@@ -643,8 +643,8 @@ function tapas()
 function eat()
 {
     if [ "$OUT" ] ; then
-        MODVERSION=`sed -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
-        ZIPFILE=update-cm-$MODVERSION-signed.zip
+        MODVERSION=`sed -n -e'/ro\.aokp\.version/s/^.*=//p' $OUT/system/build.prop`
+        ZIPFILE=$MODVERSION.zip
         ZIPPATH=$OUT/$ZIPFILE
         if [ ! -f $ZIPPATH ] ; then
             echo "Nothing to eat"
@@ -660,7 +660,7 @@ function eat()
             echo "Device Found.."
         fi
         echo "Pushing $ZIPFILE to device"
-        if adb push $ZIPPATH /storage/sdcard0/ ; then
+        if adb push $ZIPPATH /sdcard/ ; then
             cat << EOF > /tmp/command
 --update_package=/sdcard/$ZIPFILE
 EOF
