@@ -19,7 +19,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - pspush:   push commit to AOKP gerrit instance.
 - taco:     Builds for a single device using the pseudo buildbot
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
-
+- addaosp:  Add git remote for the AOSP repository
 Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
@@ -1468,6 +1468,23 @@ function taco() {
     done
 }
 
+function addaosp() {
+    git remote rm aosp >/dev/null 2>&1
+    if [ ! -d .git ]; then
+        echo "Not a git repository."
+        exit -1
+    fi
+    REPO=`pwd`
+    REPO=${REPO##$ANDROID_BUILD_TOP/}
+    git remote add aosp https://android.googlesource.com/platform/"$REPO".git
+    if ( git remote -v | grep -qv aosp ) then
+        echo "AOSP $REPO remote created"
+    else
+        echo "Error creating remote"
+        exit -1
+    fi
+}
+
 function reposync() {
     case `uname -s` in
         Darwin)
@@ -1525,3 +1542,4 @@ done
 unset f
 
 addcompletions
+export ANDROID_BUILD_TOP=$(gettop)
