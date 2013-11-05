@@ -300,7 +300,9 @@ ifneq (,$(user_variant))
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
 
   # Secure adb connections
+  ifneq ($(TARGET_WANTS_UNSECURE_ADB),true)
   ADDITIONAL_DEFAULT_PROPERTIES += ro.adb.secure=1
+  endif
 
   ifeq ($(user_variant),userdebug)
     # Pick up some extra useful tools
