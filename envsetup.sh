@@ -9,6 +9,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mm:       Builds all of the modules in the current directory.
 - mmm:      Builds all of the modules in the supplied directories.
 - cgrep:    Greps on all local C/C++ files.
+- mgrep:    Greps on all local Makefiles.
 - jgrep:    Greps on all local Java files.
 - resgrep:  Greps on all local res/*.xml files.
 - godir:    Go to the directory containing a file.
@@ -1104,6 +1105,12 @@ function jgrep()
 {
     find . -name .repo -prune -o -name .git -prune -o  -type f -name "*\.java" -print0 | xargs -0 grep --color -n "$@"
 }
+
+function mgrep()
+{
+    find . -name .repo -prune -o -name .git -prune -o  -type f -name "*\.mk" -print0 | xargs -0 grep --color -n "$@"
+}
+
 
 function cgrep()
 {
