@@ -1484,16 +1484,27 @@ function mkapush() {
 }
 
 function pstest() {
-    if [ -z "$1" ] || [ "$1" = '--help' ] || [[ "$1" != */* ]]
+    if [ -z "$1" ] || [ "$1" = '--help' ]
     then
         echo "pstest"
         echo "to use: pstest PATCH_ID/PATCH_SET"
         echo "example: pstest 5555/5"
+        exit 0
+    fi
+
+    gerrit=gerrit.aokp.co
+    project=`git config --get remote.aokp.projectname`
+    patch="$1"
+    submission=`echo $patch | cut -f1 -d "/" | tail -c 3`
+
+    if [[ "$patch" != */* ]]
+    then
+        # User did not specify revision - pull latest
+        latest=$( git ls-remote http://$gerrit/$project | grep /changes/$submission/$patch | tail -1 )
+        latest=${latest#*/*/*/*}
+        echo "Pulling latest revision for $patch"
+        git fetch http://$gerrit/$project refs/changes/$submission/$latest && git cherry-pick FETCH_HEAD
     else
-        gerrit=gerrit.aokp.co
-        project=`git config --get remote.aokp.projectname`
-        patch="$1"
-        submission=`echo $patch | cut -f1 -d "/" | tail -c 3`
         git fetch http://$gerrit/$project refs/changes/$submission/$patch && git cherry-pick FETCH_HEAD
     fi
 }
