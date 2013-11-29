@@ -1539,7 +1539,7 @@ function pspush() {
             gerrit=gerrit.aokp.co
             project=` git config --get remote.aokp.projectname`
             status="$1"
-            git push gerrit:/$project HEAD:refs/$status/jb-mr2
+            git push gerrit:/$project HEAD:refs/$status/kitkat
         else
             pspush_error
         fi
