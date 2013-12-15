@@ -660,11 +660,21 @@ function eat()
             done
             echo "Device Found.."
         fi
+        # in recovery we push to /data/media/0, otherwise push to /sdcard
+        DEVICE_PATH=/sdcard
+        if [ $(adb get-state) -eq "recovery" ]; then
+          DEVICE_PATH=/data/media/0
+        fi
         echo "Pushing $ZIPFILE to device"
-        if adb push $ZIPPATH /sdcard/ ; then
+        if adb push $ZIPPATH $DEVICEPATH/$ZIPFILE ; then
             cat << EOF > /tmp/command
---update_package=/sdcard/$ZIPFILE
+--update_package=$DEVICEPATH/$ZIPFILE
 EOF
+            if [ -n "$EAT_GAPPS_PATH" ]; then
+              cat << EOF >> /tmp/command
+--update_package=$DEVICEPATH/$EAT_GAPPS_PATH
+EOF
+            fi
             if adb push /tmp/command /cache/recovery/ ; then
                 echo "Rebooting into recovery for installation"
                 adb reboot recovery
