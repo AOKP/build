@@ -674,6 +674,7 @@ EOF
               cat << EOF >> /tmp/command
 --update_package=$DEVICEPATH/$EAT_GAPPS_PATH
 EOF
+              sed ':a;N;$!ba;s/\n/ /g' /tmp/command
             fi
             if adb push /tmp/command /cache/recovery/ ; then
                 echo "Rebooting into recovery for installation"
