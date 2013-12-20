@@ -1588,6 +1588,58 @@ function reposync() {
     esac
 }
 
+function generate_aokp_sdk() {
+    if [ ! -d "$ANDROID_HOME" ] ; then
+        echo "Set the ANDROID_HOME environment variable to your sdk dir!"
+        return -1
+    fi
+
+    local ORIGINAL_SDK=$ANDROID_HOME/platforms/android-19
+    local TARGET_SDK=$ANDROID_HOME/platforms/android-19.aokp
+
+    if [ ! -d "$ORIGINAL_SDK" ] ; then
+        echo "Download SDK platform 19!"
+        return -1
+    fi
+
+    if [ ! -d "$OUT" ] ; then
+        echo "Run this script from your build directory after a lunch."
+        return -1
+    fi
+
+    echo "Updating SDK..."
+
+    local JAVA_LIBS=$OUT/../../../target/common/obj/JAVA_LIBRARIES
+
+    local FRAMEWORKJAR=$JAVA_LIBS/framework_intermediates/classes.jar
+    local COREJAR=$JAVA_LIBS/core_intermediates/classes.jar
+    local FRAMEWORKRESJAR=$JAVA_LIBS/framework-base_intermediates/classes.jar
+
+    # setup the new sdk if it's not there yet
+    if [ ! -d "$TARGET_SDK" ] ; then
+        cp -r $ORIGINAL_SDK $TARGET_SDK
+        sed -i -e 's/ro.build.version.sdk=19/ro.build.version.sdk=119/' $TARGET_SDK/build.prop
+        sed -i -e 's/AndroidVersion.ApiLevel=19/AndroidVersion.ApiLevel=119/' $TARGET_SDK/source.properties
+        sed -i -e 's/Pkg.Desc=/Pkg.Desc=AOKP /' $TARGET_SDK/source.properties
+    fi
+
+    local HERE=$PWD
+
+    mkdir $TARGET_SDK/tmp
+    \cd $TARGET_SDK/tmp
+    jar -xf $ORIGINAL_SDK/android.jar > /dev/null
+    jar -xf $FRAMEWORKJAR > /dev/null
+    jar -xf $COREJAR > /dev/null
+    jar -xf $FRAMEWORKRESJAR > /dev/null
+    \cd ..
+    jar -cvf $TARGET_SDK/android.jar -C tmp . > /dev/null
+    rm -r tmp
+
+    \cd $HERE
+    echo "Updated AOKP SDK. Make sure to use Android SDK level 119!"
+    echo "SDK located at $TARGET_SDK"
+}
+
 # Force JAVA_HOME to point to java 1.6 if it isn't already set
 function set_java_home() {
     if [ ! "$JAVA_HOME" ]; then
