@@ -21,6 +21,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - taco:     Builds for a single device using the pseudo buildbot
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
 - addaosp:  Add git remote for the AOSP repository
+- sdkgen:   Create and add a custom sdk platform to your sdk directory from this source tree
 Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
@@ -1574,6 +1575,16 @@ function addaosp() {
     else
         echo "Error creating remote"
         exit -1
+    fi
+}
+
+function sdkgen() {
+
+    if [ -z "$ANDROID_HOME" ]; then
+        echo "ANDROID_HOME is not set. Do you have the sdk installed ?"
+        return
+    else
+        build/tools/customsdkgen.sh
     fi
 }
 
