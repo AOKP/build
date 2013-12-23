@@ -668,15 +668,14 @@ function eat()
         echo "Pushing $ZIPFILE to device"
         if adb push $ZIPPATH $DEVICEPATH/$ZIPFILE ; then
             cat << EOF > /tmp/command
---update_package=$DEVICEPATH/$ZIPFILE
+install $DEVICEPATH/$ZIPFILE
 EOF
             if [ -n "$EAT_GAPPS_PATH" ]; then
               cat << EOF >> /tmp/command
---update_package=$DEVICEPATH/$EAT_GAPPS_PATH
+install $DEVICEPATH/$EAT_GAPPS_PATH
 EOF
-              sed ':a;N;$!ba;s/\n/ /g' /tmp/command
             fi
-            if adb push /tmp/command /cache/recovery/ ; then
+            if adb push /tmp/command /cache/recovery/openrecoveryscript ; then
                 echo "Rebooting into recovery for installation"
                 adb reboot recovery
             fi
