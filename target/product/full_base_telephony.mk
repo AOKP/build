@@ -19,8 +19,7 @@
 # build quite specifically for the emulator, and might not be
 # entirely appropriate to inherit from for on-device configurations.
 
-PRODUCT_PACKAGES := \
-    VoiceDialer
+PRODUCT_PACKAGES :=
 
 PRODUCT_PROPERTY_OVERRIDES := \
     keyguard.no_require_sim=true \
