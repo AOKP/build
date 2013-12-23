@@ -458,10 +458,10 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   device_specific.FullOTA_InstallBegin()
 
-  CopyInstallTools(output_zip)
-  script.UnpackPackageDir("install", "/tmp/install")
-  script.SetPermissionsRecursive("/tmp/install", 0, 0, 0755, 0644)
-  script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0755, 0755)
+#  CopyInstallTools(output_zip)
+#  script.UnpackPackageDir("install", "/tmp/install")
+#  script.SetPermissionsRecursive("/tmp/install", 0, 0, 0755, 0644)
+#  script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0755, 0755)
 
   script.ShowProgress(0.5, 0)
 
