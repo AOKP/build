@@ -458,10 +458,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   device_specific.FullOTA_InstallBegin()
 
-#  CopyInstallTools(output_zip)
-#  script.UnpackPackageDir("install", "/tmp/install")
-#  script.SetPermissionsRecursive("/tmp/install", 0, 0, 0755, 0644)
-#  script.SetPermissionsRecursive("/tmp/install/bin", 0, 0, 0755, 0755)
+  CopyInstallTools(output_zip)
 
   script.ShowProgress(0.5, 0)
 
@@ -520,6 +517,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
   Item.Get("system").SetPermissions(script)
 
   if OPTIONS.persist:
+    script.ShowProgress(0.2, 10)
     script.RunPersist("restore")
 
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
