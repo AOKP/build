@@ -109,7 +109,9 @@ class EdifyGenerator(object):
     self.script.append(self._WordWrap(cmd))
 
   def RunPersist(self, arg):
-    self.script.append('run_program("/tmp/install/bin/persist.sh", "%s");' % arg)
+    self.script.append('package_extract_file("install/bin/persist.sh", "/tmp/persist.sh");')
+    self.script.append('set_metadata("/tmp/persist.sh", "uid", 0, "gid", 2000, "mode", 0755, "capabilities", 0x0, "selabel", "u:object_r:shell_exec:s0");')
+    self.script.append(('run_program("/tmp/persist.sh", "%s");' % arg))
 
   def ShowProgress(self, frac, dur):
     """Update the progress bar, advancing it over 'frac' over the next
