@@ -47,7 +47,7 @@ echo "android.jar created at ${OUTDIR}/android.jar"
 echo "Now attempting to create new sdk platform with it"
 
 if [ -z "$ANDROID_HOME" ]; then
-    ANDROID=$(command -v android)
+    ANDROID=$(command -v emulator)
     ANDROID_HOME=${ANDROID%/*}
     if [ -z "$ANDROID_HOME" ]; then
         echo "ANDROID_HOME variable is not set. Do you have the sdk installed ?"
