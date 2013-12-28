@@ -23,6 +23,12 @@ ifeq ($(strip $(TARGET_CPU_VARIANT)),cortex-a5)
 else
 ifeq ($(strip $(TARGET_CPU_VARIANT)),krait)
 	arch_variant_cflags := -mcpu=cortex-a9
+	TARGET_USE_KRAIT_BIONIC_OPTIMIZATION := true
+	TARGET_USE_KRAIT_PLD_SET := true
+	TARGET_KRAIT_BIONIC_PLDOFFS := 10
+	TARGET_KRAIT_BIONIC_PLDTHRESH := 10
+	TARGET_KRAIT_BIONIC_BBTHRESH := 64
+	TARGET_KRAIT_BIONIC_PLDSIZE := 64
 else
 ifeq ($(strip $(TARGET_CPU_VARIANT)),scorpion)
 	arch_variant_cflags := -mcpu=cortex-a8

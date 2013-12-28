@@ -197,12 +197,7 @@ ifneq ($(findstring llvm-gcc,$(GCC_REALPATH)),)
   $(warning * not create a useable emulator.       *)
   $(warning ****************************************)
   BUILD_EMULATOR := false
-else
-  BUILD_EMULATOR := true
 endif
-else   # HOST_OS is not darwin
-  BUILD_EMULATOR := true
-endif  # HOST_OS is darwin
 endif
 
 $(shell echo 'VERSIONS_CHECKED := $(VERSION_CHECK_SEQUENCE_NUMBER)' \
