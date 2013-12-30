@@ -488,7 +488,7 @@ function brunch()
 
 function breakfast()
 {
-    target=$1
+    target=$*
     AOKP_DEVICES_ONLY="true"
     unset LUNCH_MENU_CHOICES
     add_lunch_combo full-eng
@@ -503,14 +503,16 @@ function breakfast()
         # No arguments, so let's have the full menu
         lunch
     else
-        echo "z$target" | grep -q "-"
-        if [ $? -eq 0 ]; then
-            # A buildtype was specified, assume a full device name
-            lunch $target
-        else
-            # This is probably just the AOKP model name
-            lunch aokp_$target-userdebug
-        fi
+        for device in ${target}; do
+            echo "z$device" | grep -q "-"
+            if [ $? -eq 0 ]; then
+                # A buildtype was specified, assume a full device name
+                lunch ${device}
+            else
+                # This is probably just the AOKP model name
+                lunch aokp_${device}-userdebug
+            fi
+        done
     fi
     return $?
 }
