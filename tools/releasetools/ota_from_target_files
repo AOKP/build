@@ -465,16 +465,14 @@ def WriteFullOTAPackage(input_zip, output_zip):
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
 
-  script.Print("******************************************");
-  script.Print("*    ______  _____   __  __   _____      *");
-  script.Print("*   /\\  _  \\/\\  __`\\/\\ \\/\\ \\ /\\  _ `\\    *");
-  script.Print("*   \\ \\ \\L\\ \\ \\ \\/\\ \\ \\ \\/'/'\\ \\ \\L\\ \\   *");
-  script.Print("*    \\ \\  __ \\ \\ \\ \\ \\ \\ , <  \\ \\ ,__/   *");
-  script.Print("*     \\ \\ \\/\\ \\ \\ \\_\\ \\ \\ \\\\\\`\\ \\ \\ \\/    *");
-  script.Print("*      \\ \\_\\ \\_\\ \\_____\\ \\_\\ \\_\\\\\\ \\_\\    *");
-  script.Print("*       \\/_/\\/_/\\/_____/\\/_/\\/_/ \\/_/    *");
-  script.Print("*                                        *");
-  script.Print("******************************************");
+  script.Print("*********************************************");
+  script.Print("*         ___    |_  __ \__  //_/__  __ \    ");
+  script.Print("*         __  /| |  / / /_  ,<  __  /_/ /    ");
+  script.Print("*         _  ___ / /_/ /_  /| | _  ____/     ");
+  script.Print("*         /_/  |_\____/ /_/ |_| /_/          ");       
+  script.Print("*                                            ");
+  script.Print("*     Developed by Unicorns                  ");
+  script.Print("*********************************************");
 
   aokpv = GetBuildProp("ro.aokp.version", OPTIONS.info_dict)
   if os.getenv("AOKP_BUILD") is not None:
