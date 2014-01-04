@@ -967,7 +967,7 @@ $(hide) $(PRIVATE_CC) \
 endef
 
 define transform-c-to-o-no-deps
-@echo "target $(PRIVATE_ARM_MODE) C: $(PRIVATE_MODULE) <= $<"
+@echo -e ${CL_PFX}"target $(PRIVATE_ARM_MODE) C:"${CL_RST}" $(PRIVATE_MODULE) <= $<"
 $(call transform-c-or-s-to-o-no-deps, $(PRIVATE_CFLAGS) $(PRIVATE_CONLYFLAGS) $(PRIVATE_DEBUG_CFLAGS))
 endef
 
@@ -1054,12 +1054,12 @@ $(hide) $(PRIVATE_CC) \
 endef
 
 define transform-host-c-to-o-no-deps
-@echo "host C: $(PRIVATE_MODULE) <= $<"
+@echo -e ${CL_PFX}"host C:"${CL_RST}" $(PRIVATE_MODULE) <= $<"
 $(call transform-host-c-or-s-to-o-no-deps, $(PRIVATE_CFLAGS) $(PRIVATE_CONLYFLAGS) $(PRIVATE_DEBUG_CFLAGS))
 endef
 
 define transform-host-s-to-o-no-deps
-@echo "host asm: $(PRIVATE_MODULE) <= $<"
+@echo -e ${CL_PFX}"host asm:"${CL_RST}" $(PRIVATE_MODULE) <= $<"
 $(call transform-host-c-or-s-to-o-no-deps, $(PRIVATE_ASFLAGS))
 endef
 
@@ -1137,7 +1137,7 @@ define transform-o-to-static-lib
 @mkdir -p $(dir $@)
 @rm -f $@
 $(extract-and-include-target-whole-static-libs)
-@echo "target StaticLib: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target StaticLib:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(call split-long-arguments,$(TARGET_AR) $(TARGET_GLOBAL_ARFLAGS) $(PRIVATE_ARFLAGS) $@,$(filter %.o, $^))
 endef
 
@@ -1147,7 +1147,7 @@ endef
 
 # $(1): the full path of the source static library.
 define _extract-and-include-single-host-whole-static-lib
-@echo "preparing StaticLib: $(PRIVATE_MODULE) [including $(1)]"
+@echo -e ${CL_PFX}"preparing StaticLib:"${CL_RST}" $(PRIVATE_MODULE) [including $(1)]"
 $(hide) ldir=$(PRIVATE_INTERMEDIATES_DIR)/WHOLE/$(basename $(notdir $(1)))_objs;\
     rm -rf $$ldir; \
     mkdir -p $$ldir; \
@@ -1258,13 +1258,13 @@ endif
 
 define transform-o-to-shared-lib
 @mkdir -p $(dir $@)
-@echo "target SharedLib: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target SharedLib:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(transform-o-to-shared-lib-inner)
 endef
 
 define transform-o-to-package
 @mkdir -p $(dir $@)
-@echo "target Package: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target Package:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(transform-o-to-shared-lib-inner)
 endef
 
@@ -1275,7 +1275,7 @@ endef
 
 define transform-to-stripped
 @mkdir -p $(dir $@)
-@echo "target Strip: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target Strip:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(hide) $(TARGET_STRIP_COMMAND)
 endef
 
@@ -1307,7 +1307,7 @@ endif
 
 define transform-o-to-executable
 @mkdir -p $(dir $@)
-@echo "target Executable: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target Executable:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(transform-o-to-executable-inner)
 endef
 
@@ -1326,7 +1326,7 @@ endif
 
 define transform-o-to-static-executable
 @mkdir -p $(dir $@)
-@echo "target StaticExecutable: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"target StaticExecutable:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(transform-o-to-static-executable-inner)
 endef
 
@@ -1360,7 +1360,7 @@ endif
 
 define transform-host-o-to-executable
 @mkdir -p $(dir $@)
-@echo "host Executable: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"host Executable:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(transform-host-o-to-executable-inner)
 endef
 
@@ -1832,7 +1832,7 @@ endef
 
 # Copy a prebuilt file to a target location, stripping "# comment" comments.
 define transform-prebuilt-to-target-strip-comments
-@echo "$(if $(PRIVATE_IS_HOST_MODULE),host,target) Prebuilt: $(PRIVATE_MODULE) ($@)"
+@echo -e ${CL_PFX}"$(if $(PRIVATE_IS_HOST_MODULE),host,target) Prebuilt:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 $(copy-file-to-target-strip-comments)
 endef
 
