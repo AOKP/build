@@ -55,11 +55,16 @@ if [ -z "$ANDROID_HOME" ]; then
     fi
 fi
 
-cp -rf ${ANDROID_HOME}/platforms/android-${SDK_VER} ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}
-rm -f ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/android.jar
-cp -f ${OUTDIR}/android.jar ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/android.jar
-sed -i 's/^ro\.build\.version\.sdk=.*/ro.build.version.sdk=119/g' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/build.prop
-sed -i 's/^ro\.build\.version\.release=.*/ro.build.version.release=4.4-aokp/g' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/build.prop
-sed -i 's/AndroidVersion.ApiLevel=19/AndroidVersion.ApiLevel=119/' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/source.properties
-sed -i 's/Pkg.Desc=/Pkg.Desc=AOKP /' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/source.properties
+AOKP_SDK=${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}
+
+cp -rf ${ANDROID_HOME}/platforms/android-${SDK_VER} ${AOKP_SDK}}
+rm -f ${AOKP_SDK}/android.jar
+cp -f ${OUTDIR}/android.jar ${AOKP_SDK}/android.jar
+sed -i 's/^ro\.build\.version\.sdk=.*/ro.build.version.sdk=119/g' ${AOKP_SDK}/build.prop
+sed -i 's/^ro\.build\.version\.release=.*/ro.build.version.release=4.4-aokp/g' ${AOKP_SDK}/build.prop
+sed -i 's/AndroidVersion.ApiLevel=19/AndroidVersion.ApiLevel=119/' ${AOKP_SDK}/source.properties
+DESC=` cat ${AOKP_SDK}/source.properties | grep "Pkg.Desc=" | awk -F"=" '{print $2}'`
+if grep -qv "AOKP" <<< $DESC; then
+    sed -i 's/Pkg.Desc=/Pkg.Desc=AOKP /' ${AOKP_SDK}/source.properties
+fi
 
