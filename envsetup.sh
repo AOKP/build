@@ -1,27 +1,28 @@
 function hmm() {
 cat <<EOF
 Invoke ". build/envsetup.sh" from your shell to add the following functions to your environment:
-- lunch:    lunch <product_name>-<build_variant>
-- tapas:    tapas [<App1> <App2> ...] [arm|x86|mips] [eng|userdebug|user]
-- croot:    Changes directory to the top of the tree.
-- groot:    Changes directory to the root of the git project.
-- m:        Makes from the top of the tree.
-- mm:       Builds all of the modules in the current directory.
-- mmm:      Builds all of the modules in the supplied directories.
-- cgrep:    Greps on all local C/C++ files.
-- mgrep:    Greps on all local Makefiles.
-- jgrep:    Greps on all local Java files.
-- resgrep:  Greps on all local res/*.xml files.
-- godir:    Go to the directory containing a file.
-- mka:      Builds using SCHED_BATCH on all processors
-- mbot:     Builds for all devices using the psuedo buildbot
-- mkapush:  Same as mka with the addition of adb pushing to the device.
-- pstest:   cherry pick a patch from the AOKP gerrit instance.
-- pspush:   push commit to AOKP gerrit instance.
-- taco:     Builds for a single device using the pseudo buildbot
-- reposync: Parallel repo sync using ionice and SCHED_BATCH
-- addaosp:  Add git remote for the AOSP repository
-- sdkgen:   Create and add a custom sdk platform to your sdk directory from this source tree
+- lunch:     lunch <product_name>-<build_variant>
+- tapas:     tapas [<App1> <App2> ...] [arm|x86|mips] [eng|userdebug|user]
+- croot:     Changes directory to the top of the tree.
+- groot:     Changes directory to the root of the git project.
+- m:         Makes from the top of the tree.
+- mm:        Builds all of the modules in the current directory.
+- mmm:       Builds all of the modules in the supplied directories.
+- cgrep:     Greps on all local C/C++ files.
+- mgrep:     Greps on all local Makefiles.
+- jgrep:     Greps on all local Java files.
+- resgrep:   Greps on all local res/*.xml files.
+- godir:     Go to the directory containing a file.
+- mka:       Builds using SCHED_BATCH on all processors
+- mbot:      Builds for all devices using the psuedo buildbot
+- mkapush:   Same as mka with the addition of adb pushing to the device.
+- pstest:    cherry pick a patch from the AOKP gerrit instance.
+- pspush:    push commit to AOKP gerrit instance.
+- taco:      Builds for a single device using the pseudo buildbot
+- reposync:  Parallel repo sync using ionice and SCHED_BATCH
+- fetchpull: Executes a git fetch and git pull of upstream remote branch
+- addaosp:   Add git remote for the AOSP repository
+- sdkgen:    Create and add a custom sdk platform to your sdk directory from this source tree
 Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
@@ -1558,6 +1559,18 @@ function taco() {
             echo "No such item in brunch menu. Try 'breakfast'"
         fi
     done
+}
+
+function fetchpull() {
+    cm_project=` git config --get remote.cm.projectname `
+    aokp_project=` git config --get remote.aokp.projectname `
+    [ ! -z $cm_project ] && remote=cm; branch=cm-11;
+    [ ! -z $aokp_project ] && remote=aokp; branch=kitkat;
+    if [ -z $remote ]; then
+        echo "Not a CM or AOKP project -- cannot fetchpull"
+    else
+        git fetch $remote && git pull ${remote} ${branch}
+    fi
 }
 
 function addaosp() {
