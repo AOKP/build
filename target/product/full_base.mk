@@ -55,9 +55,6 @@ PRODUCT_AAPT_CONFIG := normal hdpi xhdpi xxhdpi
 # Get some sounds
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
 
-# Include video prebuilts
-$(call inherit-product-if-exists, frameworks/base/data/videos/VideoPackage2.mk)
-
 # Get the TTS language packs
 $(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
 
