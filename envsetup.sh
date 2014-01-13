@@ -1511,10 +1511,19 @@ function pstest() {
     if [[ "$patch" != */* ]]
     then
         # User did not specify revision - pull latest
-        latest=$( git ls-remote http://$gerrit/$project | grep /changes/$submission/$patch | tail -1 )
-        latest=${latest#*/*/*/*}
-        echo "Pulling latest revision for $patch"
-        git fetch http://$gerrit/$project refs/changes/$submission/$latest && git cherry-pick FETCH_HEAD
+        output=$( git ls-remote http://$gerrit/$project | grep /changes/$submission/$patch )
+        refchanges=$( echo "$output" | awk '{print $2}' )
+        latest=0
+
+        echo "$refchanges" | {
+            while read line; do
+                patchNum=${line##*/*/*/*/}
+                if [ $patchNum -gt $latest ]; then
+                    latest=$patchNum
+                fi
+            done
+            git fetch http://$gerrit/$project refs/changes/$submission/$patch/$latest && git cherry-pick FETCH_HEAD
+        }
     else
         git fetch http://$gerrit/$project refs/changes/$submission/$patch && git cherry-pick FETCH_HEAD
     fi
