@@ -1593,10 +1593,18 @@ function sdkgen() {
 function reposync() {
     case `uname -s` in
         Darwin)
-            repo sync -j 4 "$@"
+            if [[ $AOKP_REPOSYNC_QUIET = true ]]; then
+                repo sync -j 4 "$@" | awk '!/Fetching\ project\ /'
+            else
+                repo sync -j 4 "$@"
+            fi
             ;;
         *)
-            schedtool -B -n 1 -e ionice -n 1 repo sync -j 4 "$@"
+            if [[ $AOKP_REPOSYNC_QUIET = true ]]; then
+                schedtool -B -n 1 -e ionice -n 1 repo sync -j 4 "$@" | awk '!/Fetching\ project\ /'
+            else
+                schedtool -B -n 1 -e ionice -n 1 repo sync -j 4 "$@"
+            fi
             ;;
     esac
 }
