@@ -20,6 +20,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - pspush:   push commit to AOKP gerrit instance.
 - taco:     Builds for a single device using the pseudo buildbot
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
+- repoinit: Allows re- repo init with user input of groups
 - addaosp:  Add git remote for the AOSP repository
 - sdkgen:   Create and add a custom sdk platform to your sdk directory from this source tree
 Look at the source to view more functions. The complete list is:
@@ -1607,6 +1608,38 @@ function reposync() {
             fi
             ;;
     esac
+}
+
+function get_revision() {
+    T=$(gettop)
+    # Current revision is only available in repos not TOP.
+    # Check if at TOP and then use Manifest merge branch
+    if [ "`pwd`" = "$T" ]; then
+        rev=`repo info . | grep "Manifest merge branch" | awk {'print $4'} | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
+    else
+        rev=`repo info . | grep "Current revision" | awk {'print $3'} | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
+    fi
+    echo $rev
+}
+
+function repoinit() {
+    local groups=$*
+    T=$(gettop)
+    revision=$(get_revision)
+    if [ ! "$T" ]; then
+        echo "Couldn't locate the top of the tree.  Try setting TOP."
+        return
+    fi
+    if [ ! "$revision" ]; then
+        echo "Couldn't determine the current AOKP revision"
+        return
+    fi
+    if [ -z "$groups" ]; then
+        # if no specific group(s) specified then init for
+        ## all devices, kernels, and vendors (buildbot default)
+        groups=kernel,device,vendor
+    fi
+    repo init -u https://github.com/AOKP/platform_manifest.git -b $revision -g all,-notdefault,${groups}
 }
 
 # Force JAVA_HOME to point to java 1.6 if it isn't already set
