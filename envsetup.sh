@@ -12,6 +12,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mgrep:    Greps on all local Makefiles.
 - jgrep:    Greps on all local Java files.
 - resgrep:  Greps on all local res/*.xml files.
+- gcd:      cd's to a git project in the build tree.
 - godir:    Go to the directory containing a file.
 - mka:      Builds using SCHED_BATCH on all processors
 - mbot:     Builds for all devices using the psuedo buildbot
@@ -892,6 +893,36 @@ function groot()
     else
         echo "Already at the root of the git project."
     fi
+}
+
+function gcd()
+{
+    # TODO make handling of repos with the same name a bit cleaner/easier (ex grouper)
+    T=$(gettop)
+    repo="$T/.repo"
+    if [ -d "$repo/local_manifests" ]; then
+        local_manifests=`find $repo/local_manifests -name '*.xml'`
+    fi
+
+    if [ -n "$2" ]; then
+        local goto=`grep -r "$1" "$repo/manifest.xml" "$local_manifests" | grep "$2" | cut -f2 -d '"'`
+    else
+        # Currently defaults to CDing to the first repo if multiples (ex. grouper). This will
+        # traditionally be the device tree, so for example if you needed the kernel repo instead
+        # you would have to execute 'gcd grouper kernel'
+        local goto=`cat "$repo/manifest.xml" "$local_manifests" | cut -f2 -d '"' | grep "$1"$ | head -n 1`
+    fi
+
+    # Error checking, cause this code is still a bit ghetto
+    check=`echo "$goto" | rev | cut -f1 -d "/" | rev`
+    if [ "$1" != "$check" ]; then
+        echo "Something went wrong and you're not in the correct repo."
+        echo "This happens sometimes due to the AOSP repo nomenclature."
+        echo "To fix this, run gcd with more detail."
+        echo "ex. `gcd grouper kernel` instead of just `gcd grouper`"
+    fi
+
+    cd "$T/$goto"
 }
 
 function cproj()
