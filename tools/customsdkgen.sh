@@ -18,6 +18,7 @@ FRAMEWORKJAR=${OUTDIR}/target/common/obj/JAVA_LIBRARIES/framework_intermediates/
 COREJAR=${OUTDIR}/target/common/obj/JAVA_LIBRARIES/core_intermediates/classes.jar
 FRAMEWORKRESJAR=${OUTDIR}/target/common/obj/JAVA_LIBRARIES/framework-base_intermediates/classes.jar
 TELEPHONYJAR=${OUTDIR}/target/common/obj/JAVA_LIBRARIES/telephony-common_intermediates/classes.jar
+COMMONJAR=${OUTDIR}/target/common/obj/JAVA_LIBRARIES/android-common_intermediates/classes.jar
 
 if [ ! -f $STUBJAR ]; then
 make $STUBJAR
@@ -34,6 +35,9 @@ fi
 if [ ! -f $TELEPHONYJAR ]; then
 make $TELEPHONYJAR
 fi
+if [ ! -f $COMMONJAR ]; then
+make $COMMONJAR
+fi
 
 TMP_DIR=${OUTDIR}/tmp
 mkdir -p ${TMP_DIR}
@@ -41,7 +45,7 @@ $(cd ${TMP_DIR}; jar -xf ${STUBJAR})
 $(cd ${TMP_DIR}; jar -xf ${COREJAR})
 $(cd ${TMP_DIR}; jar -xf ${FRAMEWORKJAR})
 $(cd ${TMP_DIR}; jar -xf ${FRAMEWORKRESJAR})
-$(cd ${TMP_DIR}; jar -xf ${TELEPHONYJAR})
+$(cd ${TMP_DIR}; jar -xf ${COMMONJAR})
 
 jar -cf ${OUTDIR}/android.jar -C ${TMP_DIR}/ .
 
