@@ -87,5 +87,9 @@ ifeq ($(CYNGN_TARGET),true)
 $(info   CYNGN_TARGET=$(CYNGN_TARGET))
 $(info   CYNGN_FEATURES=$(CYNGN_FEATURES))
 endif
+ifneq ($(USE_CCACHE),)
+$(info   CCACHE_DIR=$(CCACHE_DIR))
+$(info   CCACHE_BASEDIR=$(CCACHE_BASEDIR))
+endif
 $(info ============================================)
 endif
