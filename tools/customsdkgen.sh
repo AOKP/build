@@ -45,6 +45,7 @@ $(cd ${TMP_DIR}; jar -xf ${STUBJAR})
 $(cd ${TMP_DIR}; jar -xf ${COREJAR})
 $(cd ${TMP_DIR}; jar -xf ${FRAMEWORKJAR})
 $(cd ${TMP_DIR}; jar -xf ${FRAMEWORKRESJAR})
+$(cd ${TMP_DIR}; jar -xf ${TELEPHONYJAR})
 $(cd ${TMP_DIR}; jar -xf ${COMMONJAR})
 
 jar -cf ${OUTDIR}/android.jar -C ${TMP_DIR}/ .
