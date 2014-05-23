@@ -1560,27 +1560,53 @@ function pstest() {
     fi
 }
 
+function  pspush_host() {
+    echo ""
+    echo "Host gerrit"
+    echo "  Hostname gerrit.aokp.co"
+    echo "  Port 29418"
+    echo "  User $1"
+
+}
+
 function pspush_error() {
-        echo "Requires ~/.ssh/config setup with the the following info:"
-        echo "      Host gerrit"
-        echo "        HostName gerrit.aokp.co"
-        echo "        User <your username>"
-        echo "        Port 29418"
+    echo "pspush requires ~/.ssh/config setup containing the following info:"
+    pspush_host "[sshusername]"
+}
+
+function pspush_host_create() {
+    echo "Please enter sshusername registered with gerrit.aokp.co."
+    read sshusername
+    pspush_host $sshusername  >> ~/.ssh/config
 }
 
 function pspush() {
+    local project
+    project=`git config --get remote.aokp.projectname`
+    revision=`repo info . | grep "Current revision" | awk {'print $3'} | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
     if [ -z "$1" ] || [ "$1" = '--help' ]; then
         echo "pspush"
-        echo "to use:  pspush STATUS"
-        echo "where STATUS: for=regular; drafts=draft; heads=pushed to github"
-        echo "example: pspush for"
+        echo "to use:  pspush \$destination"
+        echo "where \$destination: for=review; drafts=draft; heads=push through review to github (you probably can't)."
+        echo "example: 'pspush for'"
+        echo "will execute 'git push ssh://\$sshusername@gerrit.aokp.co:29418/$project HEAD:refs/[for][drafts][heads]/$revision'"
     else
-        checkSshConfig=` grep -rH "gerrit.aokp.co" ~/.ssh/config `
-        if [ "$checkSshConfig" != "" ]; then
-            gerrit=gerrit.aokp.co
-            project=` git config --get remote.aokp.projectname`
-            status="$1"
-            git push gerrit:/$project HEAD:refs/$status/kitkat
+        check_ssh_config="`grep -A 1 'gerrit$' ~/.ssh/config`"
+        check_ssh_config_2=`echo "$check_ssh_config" | while read line; do grep gerrit.aokp.co; done`
+        if [ -n "$check_ssh_config" ]; then
+            if [ -n "$check_ssh_config_2" ]; then
+                git push gerrit:$project HEAD:refs/$1/$revision
+            fi
+        elif [ -z "$check_ssh_config_2" ]; then
+            echo "Host entry doesn't exist, create now? (pick 1 or 2)"
+            select yn in "Yes" "No"; do
+                case $yn in
+                    Yes ) pspush_host_create
+                          echo "host entry created, please run again to push"
+                          break;;
+                    No ) pspush_error; break;;
+                esac
+            done
         else
             pspush_error
         fi
