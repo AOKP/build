@@ -1562,7 +1562,7 @@ function pstest() {
 
 function  pspush_host() {
     echo ""
-    echo "Host gerrit"
+    echo "Host aokp_gerrit"
     echo "  Hostname gerrit.aokp.co"
     echo "  Port 29418"
     echo "  User $1"
@@ -1595,7 +1595,7 @@ function pspush() {
         check_ssh_config_2=`echo "$check_ssh_config" | while read line; do grep gerrit.aokp.co; done`
         if [ -n "$check_ssh_config" ]; then
             if [ -n "$check_ssh_config_2" ]; then
-                git push gerrit:$project HEAD:refs/$1/$revision
+                git push aokp_gerrit:$project HEAD:refs/$1/$revision
             fi
         elif [ -z "$check_ssh_config_2" ]; then
             echo "Host entry doesn't exist, create now? (pick 1 or 2)"
