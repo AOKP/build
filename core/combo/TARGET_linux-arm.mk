@@ -68,7 +68,9 @@ endif
 
 TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-TARGET_arm_CFLAGS :=    -O2 \
+TARGET_arm_CFLAGS :=    -O3 \
+                        -fno-inline-functions \
+                        -fno-tree-vectorize \
                         -fomit-frame-pointer \
                         -fstrict-aliasing    \
                         -funswitch-loops
