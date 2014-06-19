@@ -162,6 +162,10 @@ endif
 TARGET_DEVICE_DIR := $(patsubst %/,%,$(dir $(board_config_mk)))
 board_config_mk :=
 
+## Rebuild the pathmap here, because it could have had changed due to recovery variant
+include $(BUILD_SYSTEM)/pathmap.mk
+
+
 # Perhaps we should move this block to build/core/Makefile,
 # once we don't have TARGET_NO_KERNEL reference in AndroidBoard.mk/Android.mk.
 ifneq ($(strip $(TARGET_NO_BOOTLOADER)),true)
