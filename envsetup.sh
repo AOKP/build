@@ -919,7 +919,7 @@ function gcd()
         echo "Something went wrong and you're not in the correct repo."
         echo "This happens sometimes due to the AOSP repo nomenclature."
         echo "To fix this, run gcd with more detail."
-        echo "ex. `gcd grouper kernel` instead of just `gcd grouper`"
+        echo "ex. \`gcd grouper kernel\` instead of just \`gcd grouper\`"
     fi
 
     cd "$T/$goto"
