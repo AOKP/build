@@ -17,7 +17,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mka:      Builds using SCHED_BATCH on all processors
 - mbot:     Builds for all devices using the psuedo buildbot
 - mkapush:  Same as mka with the addition of adb pushing to the device.
-- pstest:   cherry pick a patch from the AOKP gerrit instance.
+- pyrrit:   Helper subprogram to interact with AOKP gerrit
 - pspush:   push commit to AOKP gerrit instance.
 - taco:     Builds for a single device using the pseudo buildbot
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
@@ -689,6 +689,8 @@ EOF
     fi
     return $?
 }
+
+
 
 function gettop
 {
@@ -1525,41 +1527,6 @@ function mkapush() {
     esac
 }
 
-function pstest() {
-    if [ -z "$1" ] || [ "$1" = '--help' ]
-    then
-        echo "pstest"
-        echo "to use: pstest PATCH_ID/PATCH_SET"
-        echo "example: pstest 5555/5"
-        exit 0
-    fi
-
-    gerrit=gerrit.aokp.co
-    project=`git config --get remote.aokp.projectname`
-    patch="$1"
-    submission=`echo $patch | cut -f1 -d "/" | tail -c 3`
-
-    if [[ "$patch" != */* ]]
-    then
-        # User did not specify revision - pull latest
-        output=$( git ls-remote http://$gerrit/$project | grep /changes/$submission/$patch )
-        refchanges=$( echo "$output" | awk '{print $2}' )
-        latest=0
-
-        echo "$refchanges" | {
-            while read line; do
-                patchNum=${line##*/*/*/*/}
-                if [ $patchNum -gt $latest ]; then
-                    latest=$patchNum
-                fi
-            done
-            git fetch http://$gerrit/$project refs/changes/$submission/$patch/$latest && git cherry-pick FETCH_HEAD
-        }
-    else
-        git fetch http://$gerrit/$project refs/changes/$submission/$patch && git cherry-pick FETCH_HEAD
-    fi
-}
-
 function  pspush_host() {
     echo ""
     echo "Host aokp_gerrit"
@@ -1568,7 +1535,11 @@ function  pspush_host() {
     echo "  User $1"
 
 }
-
+function pyrrit
+{
+    T=$(gettop)
+    python2.7 ${T}/build/tools/pyrrit $@
+}
 function pspush_error() {
     echo "pspush requires ~/.ssh/config setup containing the following info:"
     pspush_host "[sshusername]"
