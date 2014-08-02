@@ -3,19 +3,22 @@ import sys
 
 import listchanges
 import pullchange
+import topicpull
 
 
 __author__ = 'arnav'
 
 
 def print_help(extended):
-    print("Usage : pyrrit [mode [parameters]]")
+    print("Usage : pyrrit <mode [parameters]> [-flag parameter]")
     print("Where mode can be \n")
-    print("list [dirpath]          - Show all open patches [for given directory path]")
+    print("list [dirpath]              - Show all open patches [for given directory path]")
     print("upload")
-    print("pull ps#                - Pull the given patchset(s)")
-    print("pstest ps# device       - Pull the given patchset(s), and make a build for device to test")
-    print("help                    - Show extended help")
+    print("pull ps1 [ps2 [ps3..]]      - Pull the given patchset(s)")
+    print("pstest device ps1 [ps2..]   - Pull the given patchset(s), and make a build for device to test")
+    print("topicpull topic             - Pull all patchset(s) of given topic")
+    print("topictest device topic      - Pull all patchset(s) of given topic, and make a build for device to test")
+    print("help                        - Show extended help")
     if extended:
         print("\n")
         print("Some example commands\n")
@@ -41,6 +44,9 @@ if __name__ == '__main__':
             pullchange.pull_changes(changes)
         else:
             print('Please mention the change # of patch you want to pull')
+
+    elif sys.argv[1] == "topicpull":
+        topicpull.topicpull(sys.argv[2])
 
     elif sys.argv[1] == "list":
         if len(sys.argv) == 3:
