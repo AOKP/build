@@ -1452,9 +1452,25 @@ bacon: otapackage
 ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
 	$(error TARGET_CUSTOM_RELEASETOOL is deprecated)
 endif
+	$(hide) find $(PRODUCT_OUT) -maxdepth 1 -xdev -samefile $(INTERNAL_OTA_PACKAGE_TARGET) | grep -v ota-eng | xargs rm -f
+	$(hide) rm -f $(PRODUCT_OUT)/*.md5sum
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(AOKP_TARGET_PACKAGE)
-	$(hide) $(MD5SUM) $(AOKP_TARGET_PACKAGE) > $(AOKP_TARGET_PACKAGE).md5sum
-	@echo -e ${CL_CYN}"Package Complete: $(AOKP_TARGET_PACKAGE)"${CL_RST}
+	$(hide) (cd `dirname $(AOKP_TARGET_PACKAGE)` && $(MD5SUM) `basename $(AOKP_TARGET_PACKAGE)` > $(AOKP_TARGET_PACKAGE).md5sum)
+	@echo -e ""
+	@echo -e ${CL_RED}"    ______"${CL_MAG}"  _____"${CL_CYN}"   __  __"${CL_BLU}"   _____"${CL_RST}
+	@echo -e ${CL_RED}"   /\\\\  _  \\\\"${CL_MAG}"/\\\\  __\`\\\\"${CL_CYN}"/\\\\ \\\\/\\\\ \\\\"${CL_BLU}" /\\\\  _ \`\\\\"${CL_RST}
+	@echo -e ${CL_RED}"   \\\\ \\\\ \\\\L\\\\ \\\\"${CL_MAG}" \\\\ \\\\/\\\\ \\\\"${CL_CYN}" \\\\ \\\\/'/'"${CL_BLU}"\\\\ \\\\ \\\\L\\\\ \\\\"${CL_RST}
+	@echo -e ${CL_RED}"    \\\\ \\\\  __ \\\\"${CL_MAG}" \\\\ \\\\ \\\\ \\\\"${CL_CYN}" \\\\ , <"${CL_BLU}"  \\\\ \\\\ ,__/"${CL_RST}
+	@echo -e ${CL_RED}"     \\\\ \\\\ \\\\/\\\\ \\\\"${CL_MAG}" \\\\ \\\\_\\\\ \\\\"${CL_CYN}" \\\\ \\\\\\\\\`\\\\"${CL_BLU}" \\\\ \\\\ \\\\/"${CL_RST}
+	@echo -e ${CL_RED}"      \\\\ \\\\_\\\\ \\\\_\\\\"${CL_MAG}" \\\\_____\\\\"${CL_CYN}" \\\\_\\\\ \\\\_\\\\"${CL_BLU}"\\\\ \\\\_\\\\"${CL_RST}
+	@echo -e ${CL_RED}"       \\\\/_/\\\\/_/"${CL_MAG}"\\\\/_____/"${CL_CYN}"\\\\/_/\\\\/_/"${CL_BLU}" \\\\/_/"${CL_RST}
+	@echo -e ""
+	@echo -e ${CL_CYN}"===========-Package complete-==========="${CL_RST}
+	@echo -e ${CL_CYN}"zip: "${CL_MAG} $(AOKP_TARGET_PACKAGE)${CL_RST}
+	@echo -e ${CL_CYN}"md5: "${CL_MAG}" `cat $(AOKP_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`"${CL_RST}
+	@echo -e ${CL_CYN}"size:"${CL_MAG}" `ls -lah $(AOKP_TARGET_PACKAGE) | cut -d ' ' -f 5`"${CL_RST}
+	@echo -e ${CL_CYN}"========================================"${CL_RST}
+	@echo -e ""
 
 # -----------------------------------------------------------------
 # The update package
