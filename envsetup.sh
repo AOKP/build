@@ -23,6 +23,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - reposync: Parallel repo sync using ionice and SCHED_BATCH
 - addaokp:  Add git remote for the AOKP gerrit repository
 - addaosp:  Add git remote for the AOSP repository
+- addcm:    Add git remote for the CM repository
 - sdkgen:   Create and add a custom sdk platform to your sdk directory from this source tree
 Look at the source to view more functions. The complete list is:
 EOF
@@ -1646,6 +1647,33 @@ function addaosp() {
     git remote add aosp https://android.googlesource.com/platform/"$REPO".git
     if ( git remote -v | grep -qv aosp ) then
         echo "AOSP $REPO remote created"
+    else
+        echo "Error creating remote"
+        exit -1
+    fi
+}
+
+function addcm()
+{
+    git remote rm cm 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo "Not a git repository."
+        exit -1
+    fi
+    REPO=$(cat .git/config  | grep git://github.com/AOKP/ | awk '{ print $NF }' | sed s#AOKP/#CyanogenMod/android_#g)
+    if [ -z "$REPO" ]
+    then
+        REPO=$(cat .git/config  | grep https://github.com/AOKP/ | awk '{ print $NF }' | sed s#AOKP/#CyanogenMod/android_#g)
+        if [ -z "$REPO" ]
+        then
+          echo Unable to set up the git remote, are you in the root of the repo?
+          return 0
+        fi
+    fi
+    git remote add cm $REPO
+    if ( git remote -v | grep -qv cm ) then
+        echo "CM $REPO remote created"
     else
         echo "Error creating remote"
         exit -1
