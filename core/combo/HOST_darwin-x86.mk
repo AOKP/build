@@ -36,8 +36,6 @@ endif # BUILD_HOST_static
 
 build_mac_version := $(shell sw_vers -productVersion)
 
-ifneq ($(strip $(BUILD_MAC_SDK_EXPERIMENTAL)),)
-# SDK 10.7 and higher is not fully compatible with Android.
 mac_sdk_versions_supported :=  10.6 10.7 10.8 10.9
 ifneq ($(strip $(MAC_SDK_VERSION)),)
 mac_sdk_version := $(MAC_SDK_VERSION)
@@ -52,7 +50,6 @@ mac_sdk_versions_installed := $(shell xcodebuild -showsdks | grep macosx | sort 
 mac_sdk_version := $(firstword $(filter $(mac_sdk_versions_installed), $(mac_sdk_versions_supported)))
 ifeq ($(mac_sdk_version),)
 mac_sdk_version := $(firstword $(mac_sdk_versions_supported))
-endif
 endif
 endif
 
@@ -83,10 +80,10 @@ HOST_TOOLCHAIN_PREFIX := $(HOST_TOOLCHAIN_ROOT)/bin/i686-apple-darwin$(gcc_darwi
 ifneq (,$(strip $(wildcard $(HOST_TOOLCHAIN_PREFIX)-gcc)))
 HOST_CC  := $(HOST_TOOLCHAIN_PREFIX)-gcc
 HOST_CXX := $(HOST_TOOLCHAIN_PREFIX)-g++
-
 ifeq ($(mac_sdk_version),10.9)
-HOST_GLOBAL_CFLAGS += -I$(mac_sdk_root)/usr/include/c++/4.2.1 -arch i386 -Wno-nested-anon-types -Wno-unused-parameter
-HOST_GLOBAL_LDFLAGS += -Wl,-arch,i386,-lstdc++
+# Mac SDK 10.9 no longer has stdarg.h, etc
+host_toolchain_header := $(HOST_TOOLCHAIN_ROOT)/lib/gcc/i686-apple-darwin$(gcc_darwin_version)/4.2.1/include
+HOST_GLOBAL_CFLAGS += -isystem $(host_toolchain_header)
 else
 ifeq ($(mac_sdk_version),10.8)
 # Mac SDK 10.8 no longer has stdarg.h, etc
@@ -114,7 +111,7 @@ HOST_JNILIB_SUFFIX := .jnilib
 HOST_GLOBAL_CFLAGS += \
     -include $(call select-android-config-h,darwin-x86)
 
-ifneq ($(filter 10.7 10.7.% 10.8 10.8.%, $(build_mac_version)),)
+ifneq ($(filter 10.7 10.7.% 10.8 10.8.% 10.9 10.9.%, $(build_mac_version)),)
        HOST_RUN_RANLIB_AFTER_COPYING := false
 else
        HOST_RUN_RANLIB_AFTER_COPYING := true
@@ -159,10 +156,5 @@ endef
 
 # $(1): The file to check
 define get-file-size
-GSTAT=$(which gstat) ; \
-if [ ! -z "$GSTAT" ]; then \
-gstat -c "%s" $(1) ; \
-else \
-stat -f "%z" $(1) ; \
-fi
+stat -f "%z" $(1)
 endef
