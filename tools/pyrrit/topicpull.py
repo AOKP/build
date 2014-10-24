@@ -15,6 +15,7 @@ def topicpull(topic):
     for item in json_data:
         if item.get('topic') == topic:
             changes_to_pull.append(item.get('_number'))
+    changes_to_pull.sort()
     pullchange.pull_changes(changes_to_pull)
 
 
