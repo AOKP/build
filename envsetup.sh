@@ -499,7 +499,7 @@ function print_lunch_menu()
        echo "  (ohai, koush!)"
     fi
     echo
-    if [ "z${CM_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${AOKP_DEVICES_ONLY}" != "z" ]; then
        echo "Breakfast menu... pick a combo:"
     else
        echo "Lunch menu... pick a combo:"
@@ -513,7 +513,7 @@ function print_lunch_menu()
         i=$(($i+1))
     done | column
 
-    if [ "z${CM_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${AOKP_DEVICES_ONLY}" != "z" ]; then
        echo "... and don't forget the bacon!"
     fi
 
@@ -536,10 +536,10 @@ function breakfast()
 {
     target=$1
     local variant=$2
-    CM_DEVICES_ONLY="true"
+    AOKP_DEVICES_ONLY="true"
     unset LUNCH_MENU_CHOICES
     add_lunch_combo full-eng
-    for f in `/bin/ls vendor/cm/vendorsetup.sh 2> /dev/null`
+    for f in `/bin/ls vendor/aokp/vendorsetup.sh 2> /dev/null`
         do
             echo "including $f"
             . $f
@@ -555,11 +555,11 @@ function breakfast()
             # A buildtype was specified, assume a full device name
             lunch $target
         else
-            # This is probably just the CM model name
+            # This is probably just the AOKP model name
             if [ -z "$variant" ]; then
                 variant="userdebug"
             fi
-            lunch cm_$target-$variant
+            lunch aokp_$target-$variant
         fi
     fi
     return $?
@@ -700,8 +700,8 @@ function tapas()
 function eat()
 {
     if [ "$OUT" ] ; then
-        MODVERSION=`sed -n -e'/ro\.cm\.version/s/.*=//p' $OUT/system/build.prop`
-        ZIPFILE=cm-$MODVERSION.zip
+        MODVERSION=`sed -n -e'/ro\.aokp\.version/s/.*=//p' $OUT/system/build.prop`
+        ZIPFILE=aokp-$MODVERSION.zip
         ZIPPATH=$OUT/$ZIPFILE
         if [ ! -f $ZIPPATH ] ; then
             echo "Nothing to eat"
