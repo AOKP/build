@@ -187,7 +187,7 @@ while(True):
 
 # Get all commits for a specified topic
 if args.topic:
-    url = 'http://review.cyanogenmod.org/changes/?q=topic:%s' % args.topic
+    url = 'http://gerrit.aokp.co/changes/?q=topic:%s' % args.topic
     if args.verbose:
         print('Fetching all commits from topic: %s\n' % args.topic)
     f = urllib.request.urlopen(url)
@@ -252,7 +252,7 @@ for changeps in args.change_number:
     # gerrit returns two lines, a magic string and then valid JSON:
     #   )]}'
     #   [ ... valid JSON ... ]
-    url = 'http://review.cyanogenmod.org/changes/?q={change}&o={query_revision}&o=CURRENT_COMMIT&pp=0'.format(change=change, query_revision=query_revision)
+    url = 'http://gerrit.aokp.co/changes/?q={change}&o={query_revision}&o=CURRENT_COMMIT&pp=0'.format(change=change, query_revision=query_revision)
     if args.verbose:
         print('Fetching from: %s\n' % url)
     f = urllib.request.urlopen(url)
@@ -373,9 +373,9 @@ for changeps in args.change_number:
     if args.verbose:
        print('Trying to fetch the change from GitHub')
     if args.pull:
-      cmd = 'cd %s && git pull --no-edit github %s' % (project_path, fetch_ref)
+      cmd = 'cd %s && git pull --no-edit aokp %s' % (project_path, fetch_ref)
     else:
-      cmd = 'cd %s && git fetch github %s' % (project_path, fetch_ref)
+      cmd = 'cd %s && git fetch aokp %s' % (project_path, fetch_ref)
     execute_cmd(cmd)
     # Check if it worked
     FETCH_HEAD = '%s/.git/FETCH_HEAD' % project_path
