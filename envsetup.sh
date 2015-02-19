@@ -13,6 +13,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - cgrep:   Greps on all local C/C++ files.
 - ggrep:   Greps on all local Gradle files.
 - jgrep:   Greps on all local Java files.
+- pspush:   push commit to AOKP gerrit instance.
 - resgrep: Greps on all local res/*.xml files.
 - sgrep:   Greps on all local source files.
 - godir:   Go to the directory containing a file.
@@ -1400,6 +1401,59 @@ function godir () {
         pathname=${lines[0]}
     fi
     \cd $T/$pathname
+}
+
+function  pspush_host() {
+    echo ""
+    echo "Host aokp_gerrit"
+    echo "  Hostname gerrit.aokp.co"
+    echo "  Port 29418"
+    echo "  User $1"
+
+}
+
+function pspush_error() {
+    echo "pspush requires ~/.ssh/config setup containing the following info:"
+    pspush_host "[sshusername]"
+}
+
+function pspush_host_create() {
+    echo "Please enter sshusername registered with gerrit.aokp.co."
+    read sshusername
+    pspush_host $sshusername  >> ~/.ssh/config
+}
+
+function pspush() {
+    local project
+    project=`git config --get remote.aokp.projectname`
+    revision=`repo info . | grep "Current revision" | awk {'print $3'} | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"`
+    if [ -z "$1" ] || [ "$1" = '--help' ]; then
+        echo "pspush"
+        echo "to use:  pspush \$destination"
+        echo "where \$destination: for=review; drafts=draft; heads=push through review to github (you probably can't)."
+        echo "example: 'pspush for'"
+        echo "will execute 'git push ssh://\$sshusername@gerrit.aokp.co:29418/$project HEAD:refs/[for][drafts][heads]/$revision'"
+    else
+        check_ssh_config="`grep -A 1 'gerrit$' ~/.ssh/config`"
+        check_ssh_config_2=`echo "$check_ssh_config" | while read line; do grep gerrit.aokp.co; done`
+        if [ -n "$check_ssh_config" ]; then
+            if [ -n "$check_ssh_config_2" ]; then
+                git push aokp_gerrit:$project HEAD:refs/$1/$revision
+            fi
+        elif [ -z "$check_ssh_config_2" ]; then
+            echo "Host entry doesn't exist, create now? (pick 1 or 2)"
+            select yn in "Yes" "No"; do
+                case $yn in
+                    Yes ) pspush_host_create
+                          echo "host entry created, please run again to push"
+                          break;;
+                    No ) pspush_error; break;;
+                esac
+            done
+        else
+            pspush_error
+        fi
+    fi
 }
 
 # Force JAVA_HOME to point to java 1.7 or java 1.6  if it isn't already set.
