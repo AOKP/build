@@ -28,6 +28,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - installboot: Installs a boot.img to the connected device.
 - installrecovery: Installs a recovery.img to the connected device.
 - sdkgen:   Create and add a custom sdk platform to your sdk directory from this source tree
+- pyrrit:   Helper subprogram to interact with AOKP gerrit
 
 Look at the source to view more functions. The complete list is:
 EOF
@@ -1986,6 +1987,12 @@ EOF
                 || return 1
             ;;
     esac
+}
+
+function pyrrit
+{
+    T=$(gettop)
+    python2.7 ${T}/build/tools/pyrrit $@
 }
 
 function cmrebase() {
