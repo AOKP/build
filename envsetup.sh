@@ -75,11 +75,11 @@ function check_product()
     fi
 
     if (echo -n $1 | grep -q -e "^aokp_") ; then
-       AOKP_BUILD=$(echo -n $1 | sed -e 's/^aokp_//g')
+       AOKP_DEVICE=$(echo -n $1 | sed -e 's/^aokp_//g')
     else
-       AOKP_BUILD=
+       AOKP_DEVICE=
     fi
-    export AOKP_BUILD
+    export AOKP_DEVICE
 
         TARGET_PRODUCT=$1 \
         TARGET_BUILD_VARIANT= \
