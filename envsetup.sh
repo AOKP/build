@@ -485,14 +485,6 @@ function add_lunch_combo()
     LUNCH_MENU_CHOICES=(${LUNCH_MENU_CHOICES[@]} $new_combo)
 }
 
-# add the default one here
-add_lunch_combo aosp_arm-eng
-add_lunch_combo aosp_arm64-eng
-add_lunch_combo aosp_mips-eng
-add_lunch_combo aosp_mips64-eng
-add_lunch_combo aosp_x86-eng
-add_lunch_combo aosp_x86_64-eng
-
 function print_lunch_menu()
 {
     local uname=$(uname)
@@ -578,7 +570,7 @@ function lunch()
         answer=$1
     else
         print_lunch_menu
-        echo -n "Which would you like? [aosp_arm-eng] "
+        echo -n "Which would you like? [aokp_shamu-userdebug] "
         read answer
     fi
 
@@ -586,7 +578,7 @@ function lunch()
 
     if [ -z "$answer" ]
     then
-        selection=aosp_arm-eng
+        selection=aokp_shamu-userdebug
     elif (echo -n $answer | grep -q -e "^[0-9][0-9]*$")
     then
         if [ $answer -le ${#LUNCH_MENU_CHOICES[@]} ]
@@ -2316,14 +2308,8 @@ if [ "x$SHELL" != "x/bin/bash" ]; then
     esac
 fi
 
-# Execute the contents of any vendorsetup.sh files we can find.
-for f in `test -d device && find -L device -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null` \
-         `test -d vendor && find -L vendor -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null`
-do
-    echo "including $f"
-    . $f
-done
-unset f
+echo "including vendor/aokp/vendorsetup.sh"
+. vendor/aokp/vendorsetup.sh
 
 addcompletions
 
