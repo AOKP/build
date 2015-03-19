@@ -3,13 +3,7 @@
 # Build system colors
 
 ifneq ($(BUILD_WITH_COLORS),0)
-  CL_RED="\033[31m"
-  CL_GRN="\033[32m"
-  CL_YLW="\033[33m"
-  CL_BLU="\033[34m"
-  CL_MAG="\033[35m"
-  CL_CYN="\033[36m"
-  CL_RST="\033[0m"
+    include $(TOP_DIR)build/core/colors.mk
 endif
 
 # HACK: clear LOCAL_PATH from including last build target before calling
