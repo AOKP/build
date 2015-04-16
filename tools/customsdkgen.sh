@@ -67,7 +67,7 @@ rm -f ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/android.jar
 cp -f ${OUTDIR}/android.jar ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/android.jar
 sed -i 's/^ro\.build\.version\.sdk=.*/ro.build.version.sdk=121/g' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/build.prop
 sed -i 's/^ro\.build\.version\.release=.*/ro.build.version.release=5.0.2-aokp/g' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/build.prop
-sed -i 's/AndroidVersion.ApiLevel=19/AndroidVersion.ApiLevel=121/' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/source.properties
+sed -i 's/AndroidVersion.ApiLevel=21/AndroidVersion.ApiLevel=121/' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/source.properties
 sed -i 's/Pkg.Desc=/Pkg.Desc=AOKP /' ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/source.properties
 
 if [ -f ${ANDROID_HOME}/platforms/android-${SDK_VER}-${CUSTOM_NAME}/android.jar ]; then
