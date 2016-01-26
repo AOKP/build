@@ -317,6 +317,8 @@ system_prop_file := $(TARGET_SYSTEM_PROP)
 else
 system_prop_file := $(wildcard $(TARGET_DEVICE_DIR)/system.prop)
 endif
+
+.PHONY: $(intermediate_system_build_prop)
 $(intermediate_system_build_prop): $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE) $(BUILD_SYSTEM)/version_defaults.mk $(system_prop_file) $(INSTALLED_ANDROID_INFO_TXT_TARGET)
 	@echo Target buildinfo: $@
 	@mkdir -p $(dir $@)
@@ -3196,8 +3198,28 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-.PHONY: otapackage
+.PHONY: otapackage aokp
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
+aokp: otapackage
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(AOKP_TARGET_PACKAGE)
+	$(hide) $(MD5SUM) $(AOKP_TARGET_PACKAGE) > $(AOKP_TARGET_PACKAGE).md5sum
+	@echo -e ""
+	@echo -e "============================================================================"
+	@echo -e "                    ______""  _____""   __  __""   _____"
+	@echo -e "                   /\\\\  _  \\\\""/\\\\  __\`\\\\""/\\\\ \\\\/\\\\ \\\\"" /\\\\  _ \`\\\\"
+	@echo -e "                   \\\\ \\\\ \\\\L\\\\ \\\\"" \\\\ \\\\/\\\\ \\\\"" \\\\ \\\\/'/'""\\\\ \\\\ \\\\L\\\\ \\\\"
+	@echo -e "                    \\\\ \\\\  __ \\\\"" \\\\ \\\\ \\\\ \\\\"" \\\\ , <""  \\\\ \\\\ ,__/"
+	@echo -e "                     \\\\ \\\\ \\\\/\\\\ \\\\"" \\\\ \\\\_\\\\ \\\\"" \\\\ \\\\\\\\\`\\\\"" \\\\ \\\\ \\\\/"
+	@echo -e "                      \\\\ \\\\_\\\\ \\\\_\\\\"" \\\\_____\\\\"" \\\\_\\\\ \\\\_\\\\""\\\\ \\\\_\\\\"
+	@echo -e "                       \\\\/_/\\\\/_/""\\\\/_____/""\\\\/_/\\\\/_/"" \\\\/_/"
+	@echo -e ""
+	@echo -e "=============================-Package complete-============================="
+	@echo -e "Folder : " $(AOKP_TARGET_PACKAGE_FOLDER)
+	@echo -e "ZipName: "$(AOKP_VERSION).zip$
+	@echo -e "MD5    : "" `cat $(AOKP_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`"
+	@echo -e "Size   : "" `ls -lah $(AOKP_TARGET_PACKAGE) | cut -d ' ' -f 5`"
+	@echo -e "============================================================================"
+	@echo -e ""
 
 endif    # build_ota_package
 
