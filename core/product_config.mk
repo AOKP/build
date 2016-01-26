@@ -179,7 +179,7 @@ include $(BUILD_SYSTEM)/node_fns.mk
 include $(BUILD_SYSTEM)/product.mk
 include $(BUILD_SYSTEM)/device.mk
 
-# A AOKP build needs only the AOKP product makefiles.
+# An AOKP build needs only the AOKP product makefiles.
 ifneq ($(AOKP_BUILD),)
   all_product_configs := $(shell find device -path "*/$(AOKP_BUILD)/aokp.mk")
 else
