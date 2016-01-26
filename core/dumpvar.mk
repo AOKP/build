@@ -129,4 +129,38 @@ $(info ============================================)
 $(foreach v, $(print_build_config_vars),\
   $(info $v=$($(v))))
 $(info ============================================)
+
+ifneq ($(BUILD_WITH_COLORS),0)
+    include $(TOP_DIR)build/core/colors.mk
+endif
+
+$(info  $(CLR_CYN)============================================)
+$(info   $(CLR_BLU)PLATFORM_VERSION_CODENAME = $(CLR_CYN)$(PLATFORM_VERSION_CODENAME))
+$(info   $(CLR_BLU)PLATFORM_VERSION = $(CLR_CYN)$(PLATFORM_VERSION))
+$(info   $(CLR_BOLD)$(CLR_BLU)AOKP_VERSION = $(CLR_CYN)$(AOKP_VERSION)$(CLR_RST))
+$(info   $(CLR_BLU)TARGET_PRODUCT = $(CLR_CYN)$(TARGET_PRODUCT))
+$(info   $(CLR_BLU)TARGET_BUILD_VARIANT = $(CLR_CYN)$(TARGET_BUILD_VARIANT))
+$(info   $(CLR_BLU)TARGET_BUILD_TYPE = $(CLR_CYN)$(TARGET_BUILD_TYPE))
+$(info   $(CLR_BLU)TARGET_BUILD_APPS = $(CLR_CYN)$(TARGET_BUILD_APPS))
+$(info   $(CLR_BLU)TARGET_ARCH = $(CLR_CYN)$(TARGET_ARCH))
+$(info   $(CLR_BLU)TARGET_ARCH_VARIANT = $(CLR_CYN)$(TARGET_ARCH_VARIANT))
+$(info   $(CLR_BLU)TARGET_CPU_VARIANT = $(CLR_CYN)$(TARGET_CPU_VARIANT))
+$(info   $(CLR_BLU)TARGET_2ND_ARCH = $(CLR_CYN)$(TARGET_2ND_ARCH))
+$(info   $(CLR_BLU)TARGET_2ND_ARCH_VARIANT = $(CLR_CYN)$(TARGET_2ND_ARCH_VARIANT))
+$(info   $(CLR_BLU)TARGET_2ND_CPU_VARIANT = $(CLR_CYN)$(TARGET_2ND_CPU_VARIANT))
+$(info   $(CLR_BLU)HOST_ARCH = $(CLR_CYN)$(HOST_ARCH))
+$(info   $(CLR_BLU)HOST_OS = $(CLR_CYN)$(HOST_OS))
+$(info   $(CLR_BLU)HOST_OS_EXTRA = $(CLR_CYN)$(HOST_OS_EXTRA))
+$(info   $(CLR_BLU)HOST_BUILD_TYPE = $(CLR_CYN)$(HOST_BUILD_TYPE))
+$(info   $(CLR_BLU)BUILD_ID = $(CLR_CYN)$(BUILD_ID))
+$(info   $(CLR_BLU)OUT_DIR = $(CLR_CYN)$(OUT_DIR))
+ifeq ($(CYNGN_TARGET),true)
+$(info   $(CLR_BLU)CYNGN_TARGET = $(CLR_CYN)$(CYNGN_TARGET))
+$(info   $(CLR_BLU)CYNGN_FEATURES = $(CLR_CYN)$(CYNGN_FEATURES))
+endif
+ifneq ($(USE_CCACHE),)
+$(info   $(CLR_BLU)CCACHE_DIR = $(CLR_CYN)$(CCACHE_DIR))
+$(info   $(CLR_BLU)CCACHE_BASEDIR = $(CLR_CYN)$(CCACHE_BASEDIR))
+endif
+$(info   $(CLR_CYN)============================================$(CLR_RST))
 endif

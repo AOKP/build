@@ -223,9 +223,10 @@ endif
 # For Java 1.7/1.8, we require OpenJDK on linux and Oracle JDK on Mac OS.
 requires_openjdk := false
 ifeq ($(BUILD_OS),linux)
+ifeq ($(USE_ORACLE_JAVA),)
 requires_openjdk := true
 endif
-
+endif
 
 # Check for the current jdk
 ifeq ($(requires_openjdk), true)
