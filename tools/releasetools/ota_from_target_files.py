@@ -632,6 +632,37 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   system_progress = 0.75
 
+  script.Print("******************************************");
+  script.Print("*    ______  _____   __  __   _____      *");
+  script.Print("*   /\\  _  \\/\\  __`\\/\\ \\/\\ \\ /\\  _ `\\    *");
+  script.Print("*   \\ \\ \\L\\ \\ \\ \\/\\ \\ \\ \\/'/'\\ \\ \\L\\ \\   *");
+  script.Print("*    \\ \\  __ \\ \\ \\ \\ \\ \\ , <  \\ \\ ,__/   *");
+  script.Print("*     \\ \\ \\/\\ \\ \\ \\_\\ \\ \\ \\\\\\`\\ \\ \\ \\/    *");
+  script.Print("*      \\ \\_\\ \\_\\ \\_____\\ \\_\\ \\_\\\\\\ \\_\\    *");
+  script.Print("*       \\/_/\\/_/\\/_____/\\/_/\\/_/ \\/_/    *");
+  script.Print("*                                        *");
+  script.Print("*                         http://aokp.co *");
+  script.Print("******************************************");
+
+  aokpv = GetBuildProp("ro.aokp.version", OPTIONS.info_dict)
+  if os.getenv("AOKP_BUILD") is not None:
+    build = ' '.join(aokpv.split('_')[3].split('-')).title()
+    script.Print("*   Version: %s"%(build));
+  elif os.getenv("AOKP_NIGHTLY") is not None:
+    build = ' '.join(aokpv.split('_')[2:]).title()
+    script.Print("*   Version: %s"%(build));
+  else:
+    build = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+    script.Print("******************************************");
+    script.Print("************ UNOFFICIAL BUILD ************");
+    script.Print("******************************************");
+    script.Print("*   Compiled: %s"%(build));
+
+  device = GetBuildProp("ro.aokp.device", OPTIONS.info_dict)
+  model = GetBuildProp("ro.product.brand", OPTIONS.info_dict)
+  script.Print("*   Device: %s (%s)"%(model, device));
+  script.Print("******************************************");
+
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
   if HasVendorPartition(input_zip):
@@ -1622,6 +1653,12 @@ def main(argv):
       except ValueError:
         raise ValueError("Cannot parse value %r for option %r - expecting "
                          "a float" % (a, o))
+    elif o == "--stash_threshold":
+      try:
+        OPTIONS.stash_threshold = float(a)
+      except ValueError:
+        raise ValueError("Cannot parse value %r for option %r - expecting "
+                         "a float" % (a, o))
     elif o in ("--backup",):
       OPTIONS.backuptool = bool(a.lower() == 'true')
     elif o in ("--override_device",):
@@ -1652,6 +1689,7 @@ def main(argv):
                                  "oem_settings=",
                                  "verify",
                                  "no_fallback_to_full",
+                                 "stash_threshold=",
                                  "stash_threshold=",
                                  "backup=",
                                  "override_device=",
