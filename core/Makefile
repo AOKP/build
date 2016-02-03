@@ -1158,6 +1158,8 @@ FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEP
 # so that we can get the size stat even if the build fails due to too large
 # system image.
 INSTALLED_FILES_FILE := $(PRODUCT_OUT)/installed-files.txt
+	$(hide) ./vendor/aokp/tools/changelog
+	$(hide) mv $(PRODUCT_OUT)/Changelog.txt $(PRODUCT_OUT)/$(PLATFORM_VERSION)-$(TARGET_PRODUCT).txt
 $(INSTALLED_FILES_FILE): $(FULL_SYSTEMIMAGE_DEPS)
 	@echo Installed file list: $@
 	@mkdir -p $(dir $@)
