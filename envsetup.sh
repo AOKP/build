@@ -2542,6 +2542,7 @@ function mk_timer()
     echo
     if [ $ret -eq 0 ] ; then
         printf "${color_success}#### make completed successfully "
+	paplay $(gettop)/vendor/aokp/utils/sounds/success.wav
     else
         printf "${color_failed}#### make failed to build some targets "
     fi
