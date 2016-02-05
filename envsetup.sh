@@ -622,10 +622,12 @@ function lunch()
         # if we can't find a product, try to grab it off the AOKP github
         T=$(gettop)
         pushd $T > /dev/null
-        build/tools/roomservice.py $product
+        build/tools/unicorndust.py $product
+        build/tools/roomservice.py $product true
         popd > /dev/null
         check_product $product
     else
+        build/tools/unicorndust.py $product true
         build/tools/roomservice.py $product true
     fi
     if [ $? -ne 0 ]
