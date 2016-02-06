@@ -3198,11 +3198,17 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-.PHONY: otapackage aokp
+AOKP_TARGET_PACKAGE := $(PRODUCT_OUT)/$(AOKP_VERSION).zip
+AOKP_TARGET_PACKAGE_FOLDER := $(PRODUCT_OUT)
+
+.PHONY: otapackage bacon rainbowfarts
+
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
-aokp: otapackage
+
+bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(AOKP_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(AOKP_TARGET_PACKAGE) > $(AOKP_TARGET_PACKAGE).md5sum
+rainbowfarts: bacon
 	@echo -e ""
 	@echo -e "============================================================================"
 	@echo -e "                    ______""  _____""   __  __""   _____"
