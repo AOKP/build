@@ -3222,8 +3222,8 @@ rainbowfarts: bacon
 	@echo -e "=============================-Package complete-============================="
 	@echo -e "Folder : " $(AOKP_TARGET_PACKAGE_FOLDER)
 	@echo -e "ZipName: "$(AOKP_VERSION).zip$
-	@echo -e "MD5    : "" `cat $(AOKP_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`"
-	@echo -e "Size   : "" `ls -lah $(AOKP_TARGET_PACKAGE) | cut -d ' ' -f 5`"
+	@echo -e "MD5    : "" $(shell cat $(AOKP_TARGET_PACKAGE).md5sum)"
+	@echo -e "Size   : "" $(shell du -hs $(AOKP_TARGET_PACKAGE) | awk '{print $$1}')"
 	@echo -e "============================================================================"
 	@echo -e ""
 
