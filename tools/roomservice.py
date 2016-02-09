@@ -222,7 +222,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
             print('Adding dependencies to manifest')
             add_to_manifest(fetch_list, fallback_branch)
     else:
-        print('CM: Dependencies file not found, bailing out at ' + dependencies_path)
+        print('CM: Dependencies file not found, bailing out at %s' % dependencies_path)
 
     if len(syncable_repos) > 0:
         print('Syncing dependencies')
@@ -239,7 +239,7 @@ if depsonly:
     if repo_path:
         fetch_dependencies(repo_path)
     else:
-        print("CM: Trying dependencies-only mode on a non-existing device tree? " + repo_path)
+        print("CM: Trying dependencies-only mode on a non-existing device tree? Path = %s" % repo_path)
 
     sys.exit()
 
