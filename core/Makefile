@@ -1931,8 +1931,8 @@ rainbowfarts: bacon
 	@echo -e ${CL_CYN}"=============================-Package complete-============================="${CL_RST}
 	@echo -e ${CL_CYN}"Folder : "${CL_MAG} $(AOKP_TARGET_PACKAGE_FOLDER)${CL_RST}
 	@echo -e ${CL_CYN}"ZipName: "${CL_MAG} $(AOKP_VERSION).zip${CL_RST}
-	@echo -e ${CL_CYN}"MD5    : "${CL_MAG}" `cat $(AOKP_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`"${CL_RST}
-	@echo -e ${CL_CYN}"Size   : "${CL_MAG}" `ls -lah $(AOKP_TARGET_PACKAGE) | cut -d ' ' -f 5`"${CL_RST}
+	@echo -e ${CL_CYN}"MD5    : "${CL_MAG}" $(shell cat $(AOKP_TARGET_PACKAGE).md5sum)"${CL_RST}
+	@echo -e ${CL_CYN}"Size   : "${CL_MAG}" $(shell du -hs $(AOKP_TARGET_PACKAGE) | awk '{print $$1}')"${CL_RST}
 	@echo -e ${CL_CYN}"============================================================================"${CL_RST}
 	@echo -e ""
 
