@@ -2575,8 +2575,16 @@ if [ "x$SHELL" != "x/bin/bash" ]; then
     esac
 fi
 
-echo "including vendor/aokp/vendorsetup.sh"
-. vendor/aokp/vendorsetup.sh
+# Execute the contents of any vendorsetup.sh files we can find.
+for f in `test -d device && find -L device -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null` \
+         `test -d vendor && find -L vendor -maxdepth 4 -name 'vendorsetup.sh' 2> /dev/null`
+do
+    if [[ $f != *"generic"* ]]; then
+        echo "including $f"
+        . $f
+    fi
+done
+unset f
 
 # Add completions
 check_bash_version && {
