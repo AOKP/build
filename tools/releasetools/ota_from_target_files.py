@@ -659,8 +659,12 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("*   Compiled: %s"%(build));
 
   device = GetBuildProp("ro.aokp.device", OPTIONS.info_dict)
-  model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
-  script.Print("*   Device: %s (%s)"%(model, device));
+  if not OPTIONS.override_prop:
+    model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
+    script.Print("*   Device: %s (%s)"%(model, device));
+  else:
+    script.Print("*   Device: %s"%(device));
+
   script.Print("******************************************");
 
   if OPTIONS.wipe_user_data:
