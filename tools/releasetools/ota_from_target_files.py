@@ -659,9 +659,14 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Print("*   Compiled: %s"%(build));
 
   device = GetBuildProp("ro.aokp.device", OPTIONS.info_dict)
-  model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
-  script.Print("*   Device: %s (%s)"%(model, device));
-  script.Print("******************************************");
+  if GetBuildProp("ro.product.model", OPTIONS.info_dict) is not None:
+      model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
+      script.Print("*   Device: %s (%s)"%(model, device));
+      script.Print("******************************************");
+  else:
+      script.Print("*   Device: %s "%(device));
+      script.Print("******************************************");
+
 
   if OPTIONS.wipe_user_data:
     system_progress -= 0.1
@@ -814,7 +819,8 @@ def GetBuildProp(prop, info_dict):
   try:
     return info_dict.get("build.prop", {})[prop]
   except KeyError:
-    raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
+    print ("WARNING: could not find %s in build.prop" % (prop,))
+    return None
 
 
 def AddToKnownPaths(filename, known_paths):
