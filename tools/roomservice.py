@@ -202,9 +202,10 @@ def add_to_manifest(repositories, fallback_branch = None):
     f.close()
 
 def fetch_dependencies(repo_path, fallback_branch = None):
-    print('Looking for dependencies')
+    print('Looking for dependencies of path %s' % repo_path)
     dependencies_path = repo_path + '/cm.dependencies'
     syncable_repos = []
+    dep_list = []
 
     if os.path.exists(dependencies_path):
         dependencies_file = open(dependencies_path, 'r')
@@ -212,6 +213,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         fetch_list = []
 
         for dependency in dependencies:
+            dep_list.append(dependency['target_path'])
             if not is_in_manifest(dependency['target_path']):
                 fetch_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
@@ -228,7 +230,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         print('Syncing dependencies')
         os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
 
-    for deprepo in syncable_repos:
+    for deprepo in dep_list:
         fetch_dependencies(deprepo)
 
 def has_branch(branches, revision):
