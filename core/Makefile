@@ -2152,7 +2152,7 @@ rainbowfarts: bacon
 	@echo -e ""
 	@echo -e ${CL_CYN}"=============================-Package complete-============================="${CL_RST}
 	@echo -e ${CL_CYN}"Folder : "${CL_MAG} $(AOKP_TARGET_PACKAGE_FOLDER)${CL_RST}
-	@echo -e ${CL_CYN}"ZipName: "${CL_MAG} $(AOKP_VERSION).zip${CL_RST}
+	@echo -e ${CL_CYN}"ZipName: "${CL_MAG} $(subst $(AOKP_TARGET_PACKAGE_FOLDER)/,,$(AOKP_TARGET_PACKAGE))${CL_RST}
 	@echo -e ${CL_CYN}"MD5    : "${CL_MAG}" $(shell cat $(AOKP_TARGET_PACKAGE).md5sum | awk '{print $$1}')"${CL_RST}
 	@echo -e ${CL_CYN}"Size   : "${CL_MAG}" $(shell du -hs $(AOKP_TARGET_PACKAGE) | awk '{print $$1}')"${CL_RST}
 	@echo -e ${CL_CYN}"============================================================================"${CL_RST}
