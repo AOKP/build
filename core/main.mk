@@ -225,7 +225,7 @@ OPEN_JDK ?= true
 requires_openjdk := false
 ifeq ($(BUILD_OS),linux)
 ifeq ($(USE_ORACLE_JAVA),)
-requires_openjdk := $OPEN_JDK
+requires_openjdk := $(OPEN_JDK)
 endif
 endif
 
