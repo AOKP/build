@@ -681,19 +681,18 @@ function lunch()
     fi
 
     local product=$(echo -n $selection | sed -e "s/-.*$//")
+    local device=$(echo -n $product | sed -e "s/.*aokp_//")
     check_product $product
     if [ $? -ne 0 ]
     then
         # if we can't find a product, try to grab it off the AOKP github
         T=$(gettop)
         pushd $T > /dev/null
-        build/tools/unicorndust.py $product
-        build/tools/roomservice.py $product true
+        build/tools/roomservice.py $device
         popd > /dev/null
         check_product $product
     else
-        build/tools/unicorndust.py $product true
-        build/tools/roomservice.py $product true
+        build/tools/roomservice.py -d $device
     fi
     TARGET_PRODUCT=$product \
     TARGET_BUILD_VARIANT=$variant \

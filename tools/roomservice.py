@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Copyright (C) 2012-2013, The CyanogenMod Project
+# Copyright (C) 2012-16, The CyanogenMod Project
+# Copyright (C) 2016, AOKP
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
-
+import argparse
 import base64
 import json
-import netrc
-import os
-import re
 import sys
+import os
+import glob
+
 try:
   # For python3
   import urllib.error
@@ -38,60 +38,43 @@ except ImportError:
 
 from xml.etree import ElementTree
 
-product = sys.argv[1]
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--depsonly', action='store_true')
+parser.add_argument('device')
 
-if len(sys.argv) > 2:
-    depsonly = sys.argv[2]
-else:
-    depsonly = None
+args = parser.parse_args()
+depsonly = args.depsonly
 
-try:
-    device = product[product.index("_") + 1:]
-except:
-    device = product
-
-if not depsonly:
-    print("Device %s not found. Attempting to retrieve device repository from CyanogenMod Github (http://github.com/CyanogenMod)." % device)
-
-repositories = []
-
-try:
-    authtuple = netrc.netrc().authenticators("api.github.com")
-
-    if authtuple:
-        auth_string = ('%s:%s' % (authtuple[0], authtuple[2])).encode()
-        githubauth = base64.encodestring(auth_string).decode().replace('\n', '')
-    else:
-        githubauth = None
-except:
-    githubauth = None
-
-def add_auth(githubreq):
-    if githubauth:
-        githubreq.add_header("Authorization","Basic %s" % githubauth)
-
-if not depsonly:
-    githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:CyanogenMod+in:name+fork:true" % device)
-    add_auth(githubreq)
-    try:
-        result = json.loads(urllib.request.urlopen(githubreq).read().decode())
-    except urllib.error.URLError:
-        print("Failed to search GitHub")
-        sys.exit()
-    except ValueError:
-        print("Failed to parse return data from GitHub")
-        sys.exit()
-    for res in result.get('items', []):
-        repositories.append(res)
+ran_checkdeps_on = []
 
 local_manifests = r'.repo/local_manifests'
 if not os.path.exists(local_manifests): os.makedirs(local_manifests)
 
-def exists_in_tree(lm, path):
-    for child in lm.getchildren():
-        if child.attrib['path'] == path:
-            return True
-    return False
+# Hold a copy of the main manifest
+try:
+    mm = ElementTree.parse(".repo/manifest.xml")
+    mm = mm.getroot()
+except:
+    mm = ElementTree.Element("manifest")
+
+try:
+    lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
+    lm = lm.getroot()
+    print("Got local manifest")
+except:
+    print("Did not get local manifest, will create a new one")
+    lm = ElementTree.Element("manifest")
+
+
+# Hold a copy of local manifest
+def reload_local_manifest():
+  try:
+      lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
+      lm = lm.getroot()
+      print("Got local manifest")
+  except:
+      print("Did not get local manifest, will create a new one")
+      lm = ElementTree.Element("manifest")
 
 # in-place prettyprint formatter
 def indent(elem, level=0):
@@ -109,192 +92,149 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
-def get_default_revision():
-    m = ElementTree.parse(".repo/manifest.xml")
-    d = m.findall('default')[0]
-    r = d.get('revision')
-    return r.replace('refs/heads/', '').replace('refs/tags/', '')
-
-def get_from_manifest(devicename):
-    try:
-        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
-        lm = lm.getroot()
-    except:
-        lm = ElementTree.Element("manifest")
-
-    for localpath in lm.findall("project"):
-        if re.search(".*device_.*_%s$" % device, localpath.get("name")):
-            return localpath.get("path")
-
-
-    # Devices originally from AOSP are in the main manifest...
-    try:
-        mm = ElementTree.parse(".repo/manifest.xml")
-        mm = mm.getroot()
-    except:
-        mm = ElementTree.Element("manifest")
-
-    for localpath in mm.findall("project"):
-        if re.search("android_device_.*_%s$" % device, localpath.get("name")):
-            return localpath.get("path")
-
-    return None
-
-def is_in_manifest(projectpath):
-    try:
-        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
-        lm = lm.getroot()
-    except:
-        lm = ElementTree.Element("manifest")
-
-    for localpath in lm.findall("project"):
-        if localpath.get("path") == projectpath:
-            return True
-
-    ## Search in main manifest, too
-    try:
-        lm = ElementTree.parse(".repo/manifest.xml")
-        lm = lm.getroot()
-    except:
-        lm = ElementTree.Element("manifest")
-
-    for localpath in lm.findall("project"):
-        if localpath.get("path") == projectpath:
-            return True
-
-    return False
-
-def add_to_manifest(repositories, fallback_branch = None):
-    try:
-        lm = ElementTree.parse(".repo/local_manifests/roomservice.xml")
-        lm = lm.getroot()
-    except:
-        lm = ElementTree.Element("manifest")
-
-    for repository in repositories:
-        repo_name = repository['repository']
-        repo_target = repository['target_path']
-        print('Checking if %s is fetched from %s' % (repo_target, repo_name))
-        if is_in_manifest(repo_target):
-            print('CyanogenMod/%s already fetched to %s' % (repo_name, repo_target))
-            continue
-
-        print('Adding dependency: CyanogenMod/%s -> %s' % (repo_name, repo_target))
-        project = ElementTree.Element("project", attrib = { "path": repo_target,
-            "remote": "cm", "name": "CyanogenMod/%s" % repo_name })
-
-        if 'branch' in repository:
-            project.set('revision',repository['branch'])
-        elif fallback_branch:
-            print("Using fallback branch %s for %s" % (fallback_branch, repo_name))
-            project.set('revision', fallback_branch)
-        else:
-            print("Using default branch for %s" % repo_name)
-
-        lm.append(project)
-
-    indent(lm, 0)
-    raw_xml = ElementTree.tostring(lm).decode()
+def write_out_local_manifest(manif):
+    indent(manif, 0)
+    raw_xml = ElementTree.tostring(manif).decode()
     raw_xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + raw_xml
 
     f = open('.repo/local_manifests/roomservice.xml', 'w')
     f.write(raw_xml)
     f.close()
 
-def fetch_dependencies(repo_path, fallback_branch = None):
-    print('Looking for dependencies of path %s' % repo_path)
-    dependencies_path = repo_path + '/cm.dependencies'
-    syncable_repos = []
-    dep_list = []
+def is_path_in_manifest(checkpath, name, remote, branch):
+    for defpath in mm.findall("project"):
+        if (defpath.get("path") == checkpath):
+            # print("Path %s is already tracked in default manifest from %s" % (checkpath, defpath.get("name")))
+            return True
+    for localpath in lm.findall("project"):
+        if (localpath.get("path") == checkpath):
+            if ((localpath.get("name") != name) or (localpath.get("remote") != remote) or (localpath.get("branch") != branch)):
+                print("Change in dependency : ")
+                print("OLD MAP: %s:%s:%s -> %s" % (localpath.get("remote"), localpath.get("name"),
+                    localpath.get("branch"), localpath.get("path")))
+                print("NEW MAP: %s:%s:%s -> %s" % (remote, name, branch, checkpath))
+                lm.remove(localpath)
+                return False
 
-    if os.path.exists(dependencies_path):
-        dependencies_file = open(dependencies_path, 'r')
-        dependencies = json.loads(dependencies_file.read())
-        fetch_list = []
+            # print("Path %s is already tracked in local manifest from %s" % (checkpath, localpath.get("name")))
+            return True
 
-        for dependency in dependencies:
-            dep_list.append(dependency['target_path'])
-            if not is_in_manifest(dependency['target_path']):
-                fetch_list.append(dependency)
-                syncable_repos.append(dependency['target_path'])
+def reposync(syncrepo):
+    os.system('repo sync --force-sync %s' % syncrepo)
 
-        dependencies_file.close()
 
-        if len(fetch_list) > 0:
-            print('Adding dependencies to manifest')
-            add_to_manifest(fetch_list, fallback_branch)
+def add_to_local_manifest(path, name, remote, branch=None):
+    if (remote == "cm"):
+        if (branch == None):
+            branch = "cm-13.0"
+        if not (name.find("CyanogenMod/") == 0):
+            name = "CyanogenMod/" + name
+    if (remote == "aokp"):
+        if (branch == None):
+            branch = "mm"
+        if not (name.find("AOKP/") == 0):
+            name = "AOKP/" + name
+
+    if is_path_in_manifest(path, name, remote, branch):
+        # Error messages are present in the called function, so just exit
+        return False
     else:
-        print('CM: Dependencies file not found, bailing out at %s' % dependencies_path)
+        print("Adding %s to track from %s (branch: %s) in local manifest" % (path, name, branch))
+        newproject = ElementTree.Element("project", attrib = { "path": path,
+            "remote": remote, "name": name, "branch": branch })
+        lm.append(newproject)
+        write_out_local_manifest(lm)
+        reload_local_manifest()
+        return True
 
-    if len(syncable_repos) > 0:
-        print('Syncing dependencies')
-        os.system('repo sync --force-sync %s' % ' '.join(syncable_repos))
 
-    for deprepo in dep_list:
-        fetch_dependencies(deprepo)
 
-def has_branch(branches, revision):
-    return revision in [branch['name'] for branch in branches]
+def get_from_github(device):
+        print("Going to fetch %s from AOKP github" % device)
+        try:
+            authtuple = netrc.netrc().authenticators("api.github.com")
 
-if depsonly:
-    repo_path = get_from_manifest(device)
-    if repo_path:
-        fetch_dependencies(repo_path)
-    else:
-        print("CM: Trying dependencies-only mode on a non-existing device tree? Path = %s" % repo_path)
+            if authtuple:
+                auth_string = ('%s:%s' % (authtuple[0], authtuple[2])).encode()
+                githubauth = base64.encodestring(auth_string).decode().replace('\n', '')
+            else:
+                githubauth = None
+        except:
+            githubauth = None
 
-    sys.exit()
+        githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:AOKP+in:name" % device)
+        if githubauth:
+            githubreq.add_header("Authorization","Basic %s" % githubauth)
 
-else:
-    for repository in repositories:
-        repo_name = repository['name']
-        if repo_name.startswith("android_device_") and repo_name.endswith("_" + device):
-            print("Found repository: %s" % repository['name'])
-            
-            manufacturer = repo_name.replace("android_device_", "").replace("_" + device, "")
-            
-            default_revision = get_default_revision()
-            print("Default revision: %s" % default_revision)
-            print("Checking branch info")
-            githubreq = urllib.request.Request(repository['branches_url'].replace('{/branch}', ''))
-            add_auth(githubreq)
+        try:
             result = json.loads(urllib.request.urlopen(githubreq).read().decode())
-
-            ## Try tags, too, since that's what releases use
-            if not has_branch(result, default_revision):
-                githubreq = urllib.request.Request(repository['tags_url'].replace('{/tag}', ''))
-                add_auth(githubreq)
-                result.extend (json.loads(urllib.request.urlopen(githubreq).read().decode()))
-            
-            repo_path = "device/%s/%s" % (manufacturer, device)
-            adding = {'repository':repo_name,'target_path':repo_path}
-            
-            fallback_branch = None
-            if not has_branch(result, default_revision):
-                if os.getenv('ROOMSERVICE_BRANCHES'):
-                    fallbacks = list(filter(bool, os.getenv('ROOMSERVICE_BRANCHES').split(' ')))
-                    for fallback in fallbacks:
-                        if has_branch(result, fallback):
-                            print("Using fallback branch: %s" % fallback)
-                            fallback_branch = fallback
-                            break
-
-                if not fallback_branch:
-                    print("Default revision %s not found in %s. Bailing." % (default_revision, repo_name))
-                    print("Branches found:")
-                    for branch in [branch['name'] for branch in result]:
-                        print(branch)
-                    print("Use the ROOMSERVICE_BRANCHES environment variable to specify a list of fallback branches.")
-                    sys.exit()
-
-            add_to_manifest([adding], fallback_branch)
-
-            print("Syncing repository to retrieve project.")
-            os.system('repo sync --force-sync %s' % repo_path)
-            print("Repository synced!")
-
-            fetch_dependencies(repo_path, fallback_branch)
-            print("Done")
+        except urllib.error.URLError:
+            print("Failed to search GitHub")
+            sys.exit()
+        except ValueError:
+            print("Failed to parse return data from GitHub")
             sys.exit()
 
-print("Repository for %s not found in the CyanogenMod Github repository list. If this is in error, you may need to manually add it to your local_manifests/roomservice.xml." % device)
+        res = result.get('items', [])[0]
+
+        print("Found %s" % res['name'])
+        devicepath = res['name'].replace("_","/")
+        if add_to_local_manifest(devicepath, res['full_name'], "aokp"):
+            reposync(res['full_name'])
+
+def checkdeps(repo_path):
+    cmdeps = glob.glob(repo_path + "/cm.dependencies")
+    aokpdeps = glob.glob(repo_path + "/aokp.dependencies")
+    if ((len(cmdeps) + len(aokpdeps)) < 1):
+        ran_checkdeps_on.append("NO_DEPS:\t\t" + repo_path)
+        return
+    else:
+        if (len(cmdeps) > 0):
+            ran_checkdeps_on.append("HAS_CM_DEPS:\t" + repo_path)
+            cmdeps = cmdeps[0]
+            cmdeps = open(cmdeps, 'r')
+            cmdeps = json.loads(cmdeps.read())
+            for dep in cmdeps:
+                try:
+                    branch = dep['branch']
+                except:
+                    branch = None
+                try:
+                    remote = dep['remote']
+                except:
+                    remote = "cm"
+                if add_to_local_manifest(dep['target_path'], dep['repository'], remote, branch):
+                    reposync(dep['target_path'])
+                checkdeps(dep['target_path'])
+
+
+        if (len(aokpdeps) > 0):
+            ran_checkdeps_on.append("HAS_AOKP_DEPS:\t" + repo_path)
+            aokpdeps = aokpdeps[0]
+            aokpdeps = open(aokpdeps, 'r')
+            aokpdeps = json.loads(aokpdeps.read())
+            for dep in aokpdeps:
+                try:
+                    branch = dep['branch']
+                except:
+                    branch = None
+                try:
+                    remote = dep['remote']
+                except:
+                    remote = "aokp"
+                if add_to_local_manifest(dep['target_path'], dep['repository'], remote, branch):
+                    reposync(dep['target_path'])
+                checkdeps(dep['target_path'])
+
+######## MAIN SCRIPT STARTS HERE ############
+
+reload_local_manifest()
+
+if not depsonly:
+    get_from_github(args.device)
+
+checkdeps("device/*/%s" % args.device)
+
+print("Checked dependency tree over : ")
+for repo in ran_checkdeps_on:
+    print("    %s" % repo)
