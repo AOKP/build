@@ -162,7 +162,7 @@ def get_from_github(device):
         except:
             githubauth = None
 
-        githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:AOKP+in:name" % device)
+        githubreq = urllib.request.Request("https://api.github.com/search/repositories?q=%s+user:AOKP+in:name+fork:true" % device)
         if githubauth:
             githubreq.add_header("Authorization","Basic %s" % githubauth)
 
