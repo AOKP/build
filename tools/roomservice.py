@@ -175,12 +175,13 @@ def get_from_github(device):
             print("Failed to parse return data from GitHub")
             sys.exit()
 
-        res = result.get('items', [])[0]
-
-        print("Found %s" % res['name'])
-        devicepath = res['name'].replace("_","/")
-        if add_to_local_manifest(devicepath, res['full_name'], "aokp"):
-            reposync(res['full_name'])
+        for res in result['items']:
+            if (res['name'].endswith("_%s" % device)):
+                print("Found %s" % res['name'])
+                devicepath = res['name'].replace("_","/")
+                if add_to_local_manifest(devicepath, res['full_name'], "aokp"):
+                    reposync(res['full_name'])
+                break
 
 def checkdeps(repo_path):
     cmdeps = glob.glob(repo_path + "/cm.dependencies")
