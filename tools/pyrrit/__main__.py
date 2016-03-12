@@ -16,7 +16,7 @@ def print_help(extended):
     print("upload")
     print("pull ps1 [ps2 [ps3..]]      - Pull the given patchset(s)")
     print("pstest device ps1 [ps2..]   - Pull the given patchset(s), and make a build for device to test")
-    print("topicpull topic             - Pull all patchset(s) of given topic")
+    print("topicpull topic [-branch]   - Pull all patchset(s) of given topic and optionally create a branch named after the topic")
     print("topictest device topic      - Pull all patchset(s) of given topic, and make a build for device to test")
     print("help                        - Show extended help")
     if extended:
@@ -41,12 +41,19 @@ if __name__ == '__main__':
     elif sys.argv[1] == "pull":
         if len(sys.argv) >= 3:
             changes = sys.argv[2:]
-            pullchange.pull_changes(changes)
+            pullchange.pull_changes(changes, "")
         else:
             print('Please mention the change # of patch you want to pull')
 
     elif sys.argv[1] == "topicpull":
-        topicpull.topicpull(sys.argv[2])
+        if len(sys.argv) == 4:
+            if sys.argv[3] == "-branch":
+                topicpull.topicpull(sys.argv[2], sys.argv[2]) # pass the topic in case we want a branch
+            else:
+                print("Bad argument passed")
+                print_help(False)
+        else:
+            topicpull.topicpull(sys.argv[2], "")
 
     elif sys.argv[1] == "list":
         if len(sys.argv) == 3:
