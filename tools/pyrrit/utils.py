@@ -26,7 +26,9 @@ def change_path_to_project_url(path):
 def change_projname_to_dirpath(projname):
     # remove the project's base dir (for eg. the "AOKP/" part)
     dirpath = projname.replace(projname[:len(config.g_proj_basedir)], '')
-    dirpath = dirpath.replace('_', '/')
+    projects = subprocess.check_output("repo list", shell=True)
+    project = [line for line in projects.split('\n') if dirpath in line]
+    dirpath = project[0].split(" : ")[0]
     return dirpath
 
 
