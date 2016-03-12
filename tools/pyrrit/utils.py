@@ -26,7 +26,10 @@ def change_path_to_project_url(path):
 def change_projname_to_dirpath(projname):
     # remove the project's base dir (for eg. the "AOKP/" part)
     dirpath = projname.replace(projname[:len(config.g_proj_basedir)], '')
-    dirpath = dirpath.replace('_', '/')
+    if dirpath == "cm_platform_sdk": # well :/
+        dirpath = "vendor/cmsdk"
+    else:
+        dirpath = dirpath.replace('_', '/')
     return dirpath
 
 
