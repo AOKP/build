@@ -36,16 +36,21 @@ def select_rev_index(rev_numbers, given_rev_no):
     return rev_numbers.index(sel_rev)
 
 
-def cherry_pick_change(dir_path, url, ref):
+def cherry_pick_change(dir_path, url, ref, branch):
     cd_command = "cd " + top_dir + "/" + dir_path
+
+    if branch:
+        branch_command = "repo start " + branch + " . && "
+    else:
+        branch_command = ""
 
     fetch_command = "git fetch " + url + " " + ref
     cherrypick_command = "git cherry-pick FETCH_HEAD"
 
-    os.system(cd_command + " && " + fetch_command + " && " + cherrypick_command)
+    os.system(cd_command + " && " + branch_command + fetch_command + " && " + cherrypick_command)
 
 
-def pull_one_change(raw_change_no):
+def pull_one_change(raw_change_no, branch):
     change_no = utils.segmentise_change_no(raw_change_no)[0]
     rev_no = utils.segmentise_change_no(raw_change_no)[1]
     url = p_url + change_no + "?o=ALL_REVISIONS"
@@ -65,9 +70,9 @@ def pull_one_change(raw_change_no):
         rev_branches.append(json_data["revisions"][revision]['fetch']['anonymous http']['ref'])
         rev_urls.append(json_data["revisions"][revision]['fetch']['anonymous http']['url'])
     rev_index = select_rev_index(rev_numbers, int(rev_no))
-    cherry_pick_change(dir_path, rev_urls[rev_index], rev_branches[rev_index])
+    cherry_pick_change(dir_path, rev_urls[rev_index], rev_branches[rev_index], branch)
 
 
-def pull_changes(change_nos):
+def pull_changes(change_nos, branch):
     for change_no in change_nos:
-        pull_one_change(change_no)
+        pull_one_change(change_no, branch)
