@@ -43,6 +43,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - mbot:     Builds for all devices using the psuedo buildbot
 - taco:     Builds for a single device using the pseudo buildbot
 - addaokp:  Add git remote for the AOKP gerrit repository
+- cdiff:    commit difference between the current and the specified branch
 
 Environemnt options:
 - SANITIZE_HOST: Set to 'true' to use ASAN for all host modules. Note that
@@ -1784,6 +1785,23 @@ function addaokp() {
         echo "Error creating remote"
         exit -1
     fi
+}
+
+function cdiff() {
+    if [ -z "$1" ]; then
+        echo "Usage: cdiff <ref>"
+        return
+    fi
+    if [ ! -d .git ]
+    then
+        echo "$(pwd) is not in a git repository"
+        return
+    fi
+    branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+    branch_name="ORIG_HEAD"     # detached HEAD
+    branch_name=${branch_name##refs/heads/}
+
+    git cherry -v $branch_name $1 | awk '!/\-\ /'
 }
 
 function aokpremote()
