@@ -176,7 +176,7 @@ def get_from_github(device):
             sys.exit()
 
         for res in result['items']:
-            if (res['name'].endswith("_%s" % device)):
+            if (res['name'].startswith("device_") and res['name'].endswith("_%s" % device)):
                 print("Found %s" % res['name'])
                 devicepath = res['name'].replace("_","/")
                 if add_to_local_manifest(devicepath, res['full_name'], "aokp"):
