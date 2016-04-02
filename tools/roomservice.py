@@ -108,10 +108,10 @@ def is_path_in_manifest(checkpath, name, remote, branch):
             return True
     for localpath in lm.findall("project"):
         if (localpath.get("path") == checkpath):
-            if ((localpath.get("name") != name) or (localpath.get("remote") != remote) or (localpath.get("branch") != branch)):
+            if ((localpath.get("name") != name) or (localpath.get("remote") != remote) or (localpath.get("revision") != branch)):
                 print("Change in dependency : ")
                 print("OLD MAP: %s:%s:%s -> %s" % (localpath.get("remote"), localpath.get("name"),
-                    localpath.get("branch"), localpath.get("path")))
+                    localpath.get("revision"), localpath.get("path")))
                 print("NEW MAP: %s:%s:%s -> %s" % (remote, name, branch, checkpath))
                 lm.remove(localpath)
                 return False
@@ -141,7 +141,7 @@ def add_to_local_manifest(path, name, remote, branch=None):
     else:
         print("Adding %s to track from %s (branch: %s) in local manifest" % (path, name, branch))
         newproject = ElementTree.Element("project", attrib = { "path": path,
-            "remote": remote, "name": name, "branch": branch })
+            "remote": remote, "name": name, "revision": branch })
         lm.append(newproject)
         write_out_local_manifest(lm)
         reload_local_manifest()
