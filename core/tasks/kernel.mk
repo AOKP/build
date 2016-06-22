@@ -226,6 +226,9 @@ endif
 
 ifneq ($(USE_CCACHE),)
     ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
+    ifneq ($(CCACHE_BINARY),)
+        ccache := $(CCACHE_BINARY)
+    endif
     # Check that the executable is here.
     ccache := $(strip $(wildcard $(ccache)))
 endif
