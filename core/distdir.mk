@@ -29,7 +29,7 @@ ifdef dist_goal
 define copy-one-dist-file
 $(3): $(2)
 $(2): $(1)
-	@echo "Dist: $$@"
+	@echo -e ${CL_YLW}"Dist:"${CL_RST}" $$@"
 	$$(copy-file-to-new-target-with-cp)
 endef
 
