@@ -513,7 +513,7 @@ endif
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 $(full_classes_jarjar_jar): PRIVATE_JARJAR_RULES := $(LOCAL_JARJAR_RULES)
 $(full_classes_jarjar_jar): $(full_classes_desugar_jar) $(LOCAL_JARJAR_RULES) | $(JARJAR)
-	@echo JarJar: $@
+	@echo -e ${CL_GRN}"JarJar:"${CL_RST}" $@"
 	$(hide) $(JAVA) -jar $(JARJAR) process $(PRIVATE_JARJAR_RULES) $< $@
 else
 full_classes_jarjar_jar := $(full_classes_desugar_jar)
@@ -687,7 +687,7 @@ $(built_dex_intermediate): $(full_classes_jar) $(DX)
 endif # LOCAL_JACK_ENABLED is disabled
 
 $(built_dex): $(built_dex_intermediate)
-	@echo Copying: $@
+	@echo -e ${CL_GRN}"Copying:"${CL_RST}" $@"
 	$(hide) mkdir -p $(dir $@)
 	$(hide) rm -f $(dir $@)/classes*.dex
 	$(hide) cp -fp $(dir $<)/classes*.dex $(dir $@)

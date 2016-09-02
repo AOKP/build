@@ -1429,7 +1429,7 @@ import_includes_deps := $(strip \
       $(call intermediates-dir-for,HEADER_LIBRARIES,$(l),$(my_kind),,$(LOCAL_2ND_ARCH_VAR_PREFIX),$(my_host_cross))/export_includes))
 $(import_includes): PRIVATE_IMPORT_EXPORT_INCLUDES := $(import_includes_deps)
 $(import_includes) : $(import_includes_deps)
-	@echo Import includes file: $@
+	@echo -e ${CL_CYN}Import includes file:${CL_RST} $@
 	$(hide) mkdir -p $(dir $@) && rm -f $@
 ifdef import_includes_deps
 	$(hide) for f in $(PRIVATE_IMPORT_EXPORT_INCLUDES); do \
@@ -1843,7 +1843,7 @@ $(export_includes): PRIVATE_REEXPORTED_INCLUDES := $(export_include_deps)
 # By adding $(my_generated_sources) it makes sure the headers get generated
 # before any dependent source files get compiled.
 $(export_includes) : $(my_export_c_include_deps) $(my_generated_sources) $(export_include_deps) $(LOCAL_EXPORT_C_INCLUDE_DEPS)
-	@echo Export includes file: $< -- $@
+	@echo -e ${CL_CYN}Export includes file:${CL_RST} $< -- $@
 	$(hide) mkdir -p $(dir $@) && rm -f $@.tmp && touch $@.tmp
 ifdef export_cflags
 	$(hide) echo "$(PRIVATE_EXPORT_CFLAGS)" >>$@.tmp
