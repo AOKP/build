@@ -382,6 +382,7 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
     adjusted_size = AdjustPartitionSizeForVerity(partition_size,
                                                  verity_fec_supported)
     if not adjusted_size:
+      print("Error: adjusting partition size for verity failed, partition_size = %d" % partition_size)
       return False
     prop_dict["partition_size"] = str(adjusted_size)
     prop_dict["original_partition_size"] = str(partition_size)
@@ -411,6 +412,7 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
     if "base_fs_file" in prop_dict:
       base_fs_file = ConvertBlockMapToBaseFs(prop_dict["base_fs_file"])
       if base_fs_file is None:
+        print("Error: no base fs file found")
         return False
       build_command.extend(["-d", base_fs_file])
     build_command.extend(["-L", prop_dict["mount_point"]])
@@ -464,8 +466,10 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
 
   try:
     if reserved_blocks and fs_type.startswith("ext4"):
+      print("fs type is ext4")
       (ext4fs_output, exit_code) = RunCommand(build_command)
     else:
+      print("fs type is not ext4")
       (_, exit_code) = RunCommand(build_command)
   finally:
     if in_dir != origin_in:
@@ -476,6 +480,7 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
     if base_fs_file is not None:
       os.remove(base_fs_file)
   if exit_code != 0:
+    print("Error: %s command unsuccessful" % build_command)
     return False
 
   # Bug: 21522719, 22023465
@@ -516,11 +521,13 @@ def BuildImage(in_dir, prop_dict, out_file, target_out=None):
   # create the verified image if this is to be verified
   if verity_supported and is_verity_partition:
     if not MakeVerityEnabledImage(out_file, verity_fec_supported, prop_dict):
+      print("Error: making verity enabled image failed")
       return False
 
   if run_fsck and prop_dict.get("skip_fsck") != "true":
     success, unsparse_image = UnsparseImage(out_file, replace=False)
     if not success:
+      print("Error: unparsing of image failed")
       return False
 
     # Run e2fsck on the inflated image file
