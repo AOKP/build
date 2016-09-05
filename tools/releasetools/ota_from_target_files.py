@@ -822,7 +822,7 @@ endif;
   common.ZipWriteStr(output_zip, "system/build.prop",
                      ""+input_zip.read("SYSTEM/build.prop"))
 
-  common.ZipWriteStr(output_zip, "META-INF/org/cyanogenmod/releasekey",
+  common.ZipWriteStr(output_zip, "META-INF/org/aokp/releasekey",
                      ""+input_zip.read("META/releasekey.txt"))
 
 def WritePolicyConfig(file_name, output_zip):
