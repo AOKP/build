@@ -36,8 +36,8 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - cmka:     Cleans and builds using mka.
 - pspush:   push commit to AOKP gerrit instance.
 - repolastsync: Prints date and time of last repo sync.
-- reposync:  Parallel repo sync using ionice and SCHED_BATCH
-- repopick:  Utility to fetch changes from Gerrit.
+- reposync: Parallel repo sync using ionice and SCHED_BATCH
+- repopick: Utility to fetch changes from Gerrit.
 - installboot: Installs a boot.img to the connected device.
 - installrecovery: Installs a recovery.img to the connected device.
 - repodiff:  Diff 2 different branches or tags within the same repo
