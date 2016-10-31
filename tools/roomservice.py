@@ -126,7 +126,7 @@ def reposync(syncrepo):
 def add_to_local_manifest(path, name, remote, branch=None):
     if (remote == "cm"):
         if (branch == None):
-            branch = "cm-14.0"
+            branch = "cm-14.1"
         if not (name.find("CyanogenMod/") == 0):
             name = "CyanogenMod/" + name
     if (remote == "aokp"):
