@@ -2593,9 +2593,16 @@ function fixup_common_out_dir() {
 
 # Enable SD-LLVM if available
 if [ -d $(gettop)/prebuilts/snapdragon-llvm/toolchains ]; then
-    export SDCLANG=true
-    export SDCLANG_PATH=$(gettop)/prebuilts/snapdragon-llvm/toolchains/llvm-Snapdragon_LLVM_for_Android_3.8/prebuilt/linux-x86_64/bin
-    export SDCLANG_LTO_DEFS=$(gettop)/device/qcom/common/sdllvm-lto-defs.mk
+    case `uname -s` in
+        Darwin)
+            # Darwin is not supported yet
+            ;;
+        *)
+            export SDCLANG=true
+            export SDCLANG_PATH=$(gettop)/prebuilts/snapdragon-llvm/toolchains/llvm-Snapdragon_LLVM_for_Android_3.8/prebuilt/linux-x86_64/bin
+            export SDCLANG_LTO_DEFS=$(gettop)/device/qcom/common/sdllvm-lto-defs.mk
+            ;;
+    esac
 fi
 
 # Force JAVA_HOME to point to java 1.7/1.8 if it isn't already set.
