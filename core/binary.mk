@@ -260,6 +260,14 @@ endif
 my_cppflags := $(my_cpp_std_version) $(my_cppflags)
 
 
+ifeq ($(SDCLANG),true)
+    ifeq ($(my_sdclang),)
+        ifeq ($(TARGET_USE_SDCLANG),true)
+            my_sdclang := true
+        endif
+    endif
+endif
+
 # arch-specific static libraries go first so that generic ones can depend on them
 my_static_libraries := $(LOCAL_STATIC_LIBRARIES_$($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH)) $(LOCAL_STATIC_LIBRARIES_$(my_32_64_bit_suffix)) $(my_static_libraries)
 my_whole_static_libraries := $(LOCAL_WHOLE_STATIC_LIBRARIES_$($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH)) $(LOCAL_WHOLE_STATIC_LIBRARIES_$(my_32_64_bit_suffix)) $(my_whole_static_libraries)
