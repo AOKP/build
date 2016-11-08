@@ -18,7 +18,8 @@
 #
 
 # skip api check for PDK buid
-ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK)))
+ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK) $(TARGET_DISABLE_CMSDK)))
+ifeq ($(FORCE_CHECK_API),true)
 
 .PHONY: checkapi
 
@@ -161,5 +162,5 @@ update-test-api: $(INTERNAL_PLATFORM_TEST_API_FILE) | $(ACP)
 	@echo Copying test-removed.txt
 	$(hide) $(ACP) $(INTERNAL_PLATFORM_TEST_REMOVED_API_FILE) frameworks/base/api/test-removed.txt
 
-
+endif
 endif

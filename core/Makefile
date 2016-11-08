@@ -1334,9 +1334,11 @@ $(BUILT_SYSTEMIMAGE): $(FULL_SYSTEMIMAGE_DEPS) $(INSTALLED_FILES_FILE)
 
 ifndef I_WANT_A_QUAIL_STAR
 ifneq ($(WITHOUT_CHECK_API),true)
+ifeq ($(FORCE_CHECK_API),true)
 $(BUILT_SYSTEMIMAGE): checkapi
 ifneq ($(TARGET_DISABLE_CMSDK),true)
 $(BUILT_SYSTEMIMAGE): checkapi-cm
+endif
 endif
 endif
 endif
