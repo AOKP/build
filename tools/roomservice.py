@@ -127,8 +127,8 @@ def add_to_local_manifest(path, name, remote, branch=None):
     if (remote == "cm"):
         if (branch == None):
             branch = "cm-14.1"
-        if not (name.find("CyanogenMod/") == 0):
-            name = "CyanogenMod/" + name
+        if not (name.find("LineageOS/") == 0):
+            name = "LineageOS/" + name
     if (remote == "aokp"):
         if (branch == None):
             branch = "nougat"
