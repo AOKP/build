@@ -689,7 +689,7 @@ function lunch()
         T=$(gettop)
         pushd $T > /dev/null
         build/tools/roomservice.py $device
-        popd > /dev/null
+        cd - > /dev/null
         check_product $product
     else
         build/tools/roomservice.py -d $device
