@@ -185,6 +185,8 @@ def get_from_github(device):
 
 def checkdeps(repo_path):
     cmdeps = glob.glob(repo_path + "/cm.dependencies")
+    if not cmdeps:
+        cmdeps = glob.glob(repo_path + "/lineage.dependencies")
     aokpdeps = glob.glob(repo_path + "/aokp.dependencies")
     if ((len(cmdeps) + len(aokpdeps)) < 1):
         ran_checkdeps_on.append("NO_DEPS:\t\t" + repo_path)
