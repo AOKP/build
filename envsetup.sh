@@ -687,7 +687,7 @@ function lunch()
     then
         # if we can't find a product, try to grab it off the AOKP github
         T=$(gettop)
-        pushd $T > /dev/null
+        cd $T > /dev/null
         build/tools/roomservice.py $device
         cd - > /dev/null
         check_product $product
