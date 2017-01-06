@@ -154,7 +154,7 @@ function check_product()
 
     if (echo -n $1 | grep -q -e "^aokp_") ; then
        AOKP_DEVICE=$(echo -n $1 | sed -e 's/^aokp_//g')
-       export BUILD_NUMBER=$((date +%s%N ; echo $AOKP_DEVICE; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10)
+       export BUILD_NUMBER=$( (date +%s%N ; echo $AOKP_DEVICE; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10 )
     else
        AOKP_DEVICE=
     fi
@@ -689,7 +689,7 @@ function lunch()
         T=$(gettop)
         pushd $T > /dev/null
         build/tools/roomservice.py $device
-        popd > /dev/null
+        cd - > /dev/null
         check_product $product
     else
         build/tools/roomservice.py -d $device
