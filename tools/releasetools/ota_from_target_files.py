@@ -2100,6 +2100,7 @@ def main(argv):
                                  "backup=",
                                  "payload_signer=",
                                  "payload_signer_args=",
+                                 "backup="
                              ], extra_option_handler=option_handler)
 
   if len(args) != 2:
