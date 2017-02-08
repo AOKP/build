@@ -38,6 +38,11 @@ print_build_config_vars += \
   WITH_SU
 endif
 
+ifneq ($(RECOVERY_VARIANT),)
+print_build_config_vars += \
+  RECOVERY_VARIANT
+endif
+
 ifeq ($(TARGET_BUILD_PDK),true)
 print_build_config_vars += \
   TARGET_BUILD_PDK \
