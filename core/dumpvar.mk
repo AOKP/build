@@ -88,6 +88,9 @@ $(info   $(CLR_BLU)HOST_OS_EXTRA = $(CLR_CYN)$(HOST_OS_EXTRA))
 $(info   $(CLR_BLU)HOST_BUILD_TYPE = $(CLR_CYN)$(HOST_BUILD_TYPE))
 $(info   $(CLR_BLU)BUILD_ID = $(CLR_CYN)$(BUILD_ID))
 $(info   $(CLR_BLU)OUT_DIR = $(CLR_CYN)$(OUT_DIR))
+ifneq ($(RECOVERY_VARIANT),)
+$(info   $(CLR_BLU)RECOVERY_VARIANT= $(CLR_CYN)$(RECOVERY_VARIANT)
+endif
 ifeq ($(WITH_SU),true)
 $(info   $(CLR_BLU)WITH_SU= $(CLR_CYN)$(WITH_SU))
 endif
