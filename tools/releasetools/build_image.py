@@ -160,7 +160,7 @@ def BuildVerityTree(sparse_image_path, verity_image_path, prop_dict):
   cmd = "build_verity_tree -A %s %s %s" % (
       FIXED_SALT, sparse_image_path, verity_image_path)
   print(cmd)
-  status, output = getstatusoutput(cmd)
+  status, output = commands.getstatusoutput(cmd)
   if status:
     print("Could not build verity tree! Error: %s" % output)
     return False
@@ -211,7 +211,7 @@ def Append2Simg(sparse_image_path, unsparse_image_path, error_message):
   cmd = "append2simg %s %s"
   cmd %= (sparse_image_path, unsparse_image_path)
   print(cmd)
-  status, output = getstatusoutput(cmd)
+  status, output = commands.getstatusoutput(cmd)
   if status:
     print("%s: %s" % (error_message, output))
     return False
@@ -220,7 +220,7 @@ def Append2Simg(sparse_image_path, unsparse_image_path, error_message):
 def Append(target, file_to_append, error_message):
   cmd = 'cat %s >> %s' % (file_to_append, target)
   print(cmd)
-  status, output = getstatusoutput(cmd)
+  status, output = commands.getstatusoutput(cmd)
   if status:
     print("%s: %s" % (error_message, output))
     return False
