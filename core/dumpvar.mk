@@ -37,6 +37,10 @@ ifeq ($(WITH_SU),true)
 print_build_config_vars += \
   WITH_SU
 endif
+ifeq ($(WITH_GMS),true)
+print_build_config_vars += \
+  WITH_GMS
+endif
 
 ifneq ($(RECOVERY_VARIANT),)
 print_build_config_vars += \
