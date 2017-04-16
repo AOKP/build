@@ -154,7 +154,7 @@ def BuildVerityFEC(sparse_image_path, verity_path, verity_fec_path,
                    padding_size):
   cmd = "fec -e -p %d %s %s %s" % (padding_size, sparse_image_path,
                                    verity_path, verity_fec_path)
-  print cmd
+  print (cmd)
   status, output = commands.getstatusoutput(cmd)
   if status:
     print("Could not build FEC data! Error: %s" % output)
@@ -191,7 +191,7 @@ def BuildVerityMetadata(image_size, verity_metadata_path, root_hash, salt,
                         block_device, signer_path, key)
   if signer_args:
     cmd += " --signer_args=\"%s\"" % (' '.join(signer_args),)
-  print cmd
+  print (cmd)
   runcmd = ["system/extras/verity/build_verity_metadata.py", image_size, verity_metadata_path, root_hash, salt, block_device, signer_path, key];
   if verity_key_password is not None:
     sp = subprocess.Popen(runcmd, stdin=subprocess.PIPE)
