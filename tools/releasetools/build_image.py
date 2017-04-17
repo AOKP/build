@@ -155,7 +155,7 @@ def BuildVerityFEC(sparse_image_path, verity_path, verity_fec_path,
   cmd = "fec -e -p %d %s %s %s" % (padding_size, sparse_image_path,
                                    verity_path, verity_fec_path)
   print (cmd)
-  status, output = commands.getstatusoutput(cmd)
+  status, output = getstatusoutput(cmd)
   if status:
     print("Could not build FEC data! Error: %s" % output)
     return False
