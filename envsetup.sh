@@ -1872,13 +1872,13 @@ function aokpremote()
         return 1
     fi
     git remote rm aokpremote 2> /dev/null
-    GERRIT_REMOTE=$(git config --get remote.github.projectname)
+    local GERRIT_REMOTE=$(git config --get remote.github.projectname)
     if [ -z "$GERRIT_REMOTE" ]
     then
-        GERRIT_REMOTE=$(git config --get remote.aosp.projectname | sed s#platform/#android/#g | sed s#/#_#g)
-        PFX="AOKP/"
+        local GERRIT_REMOTE=$(git config --get remote.aosp.projectname | sed s#platform/#android/#g | sed s#/#_#g)
+        local PFX="AOKP/"
     fi
-    AOKPUSER=$(git config --get review.gerrit.aokp.co.username)
+    local AOKPUSER=$(git config --get review.gerrit.aokp.co.username)
     if [ -z "$AOKPUSER" ]
     then
         git remote add aokpremote ssh://gerrit.aokp.co/:29418/$PFX$GERRIT_REMOTE
@@ -1896,10 +1896,10 @@ function aospremote()
         return 1
     fi
     git remote rm aosp 2> /dev/null
-    PROJECT=$(pwd -P | sed -e "s#$ANDROID_BUILD_TOP\/##; s#-caf.*##; s#\/default##")
+    local PROJECT=$(pwd -P | sed -e "s#$ANDROID_BUILD_TOP\/##; s#-caf.*##; s#\/default##")
     if (echo $PROJECT | grep -qv "^device")
     then
-        PFX="platform/"
+        local PFX="platform/"
     fi
     git remote add aosp https://android.googlesource.com/$PFX$PROJECT
     echo "Remote 'aosp' created"
