@@ -1873,12 +1873,17 @@ function aokpremote()
     fi
     git remote rm aokpremote 2> /dev/null
     GERRIT_REMOTE=$(git config --get remote.github.projectname)
+    if [ -z "$GERRIT_REMOTE" ]
+    then
+        GERRIT_REMOTE=$(git config --get remote.aosp.projectname | sed s#platform/#android/#g | sed s#/#_#g)
+        PFX="AOKP/"
+    fi
     AOKPUSER=$(git config --get review.gerrit.aokp.co.username)
     if [ -z "$AOKPUSER" ]
     then
-        git remote add aokpremote ssh://gerrit.aokp.co/:29418/$GERRIT_REMOTE
+        git remote add aokpremote ssh://gerrit.aokp.co/:29418/$PFX$GERRIT_REMOTE
     else
-        git remote add aokpremote ssh://$AOKPUSER@gerrit.aokp.co:29418/$GERRIT_REMOTE
+        git remote add aokpremote ssh://$AOKPUSER@gerrit.aokp.co:29418/$PFX$GERRIT_REMOTE
     fi
     echo You can now push to "aokpremote".
 }
