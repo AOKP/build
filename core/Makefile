@@ -262,7 +262,9 @@ system_prop_file := $(wildcard $(TARGET_DEVICE_DIR)/system.prop)
 endif
 
 .PHONY: $(intermediate_system_build_prop)
+
 $(intermediate_system_build_prop): $(VENDOR_BUILDINFO_SH) $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE) $(BUILD_SYSTEM)/version_defaults.mk $(system_prop_file) $(INSTALLED_ANDROID_INFO_TXT_TARGET)
+
 	@echo Target buildinfo: $@
 	@mkdir -p $(dir $@)
 	$(hide) echo > $@
@@ -2570,8 +2572,8 @@ else
 endif
 endif
 
-$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
-		build/tools/releasetools/ota_from_target_files
+$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
+	@echo "$(OTA_FROM_TARGET_SCRIPT)" > $(PRODUCT_OUT)/ota_script_path
 	@echo -e ${CL_YLW}"Package OTA:"${CL_RST}" $@"
 	$(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
 	   ./build/tools/releasetools/ota_from_target_files -v \
@@ -2583,11 +2585,10 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-AOKP_TARGET_PACKAGE := $(PRODUCT_OUT)/$(AOKP_VERSION).zip
+AOKP_TARGET_PACKAGE := $(AOKP_VERSION).zip
 AOKP_TARGET_PACKAGE_FOLDER := $(PRODUCT_OUT)
 
 .PHONY: otapackage bacon rainbowfarts
-
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 
 bacon: otapackage
@@ -2685,11 +2686,6 @@ $(COVERAGE_ZIP): $(SOONG_ZIP)
 # A zip of the Android Apps. Not keeping full path so that we don't
 # include product names when distributing
 #
-name := $(TARGET_PRODUCT)
-ifeq ($(TARGET_BUILD_TYPE),debug)
-  name := $(name)_debug
-endif
-name := $(name)-apps-$(FILE_NAME_TAG)
 
 APPS_ZIP := $(PRODUCT_OUT)/$(name).zip
 $(APPS_ZIP): $(INSTALLED_SYSTEMIMAGE)
