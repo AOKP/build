@@ -474,7 +474,7 @@ LOCAL_CUSTOM_BUILD_STEP_OUTPUT:=
 LOCAL_IS_AUX_MODULE :=
 
 # Include any vendor specific clear_vars.mk file
--include vendor/*/build/core/clear_vars.mk
+-include vendor/aokp/build/core/clear_vars.mk
 
 # Trim MAKEFILE_LIST so that $(call my-dir) doesn't need to
 # iterate over thousands of entries every time.
