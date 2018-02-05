@@ -436,7 +436,7 @@ $(built_apk_splits) : $(intermediates)/%.apk : $(my_src_dir)/%.apk
 
 # Rules to install the split apks.
 $(installed_apk_splits) : $(my_module_path)/%.apk : $(intermediates)/%.apk
-	@echo -e ${CL_CYN}"Install: $@"${CL_RST}
+	@echo "Install: $@"
 	$(copy-file-to-new-target)
 
 # Register the additional built and installed files.
