@@ -84,7 +84,7 @@ javac-check-$(LOCAL_MODULE) : $(full_classes_compiled_jar)
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 $(full_classes_jarjar_jar): PRIVATE_JARJAR_RULES := $(LOCAL_JARJAR_RULES)
 $(full_classes_jarjar_jar): $(full_classes_compiled_jar) $(LOCAL_JARJAR_RULES) | $(JARJAR)
-	@echo -e ${CL_GRN}"JarJar:"${CL_RST}" $@"
+	@echo JarJar: $@
 	$(hide) $(JAVA) -jar $(JARJAR) process $(PRIVATE_JARJAR_RULES) $< $@
 else
 full_classes_jarjar_jar := $(full_classes_compiled_jar)
