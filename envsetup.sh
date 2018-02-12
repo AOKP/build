@@ -629,13 +629,13 @@ function lunch()
         # if we can't find a product, try to grab it off the AOKP GitHub
         T=$(gettop)
         cd $T > /dev/null
-        vendor/aokp/build/tools/roomservice.py $device
+        vendor/aokp/build/tools/roomservice.py ${product#*_}
         cd - > /dev/null
         check_product $product
     else
         T=$(gettop)
         cd $T > /dev/null
-        vendor/aokp/build/tools/roomservice.py -d $device
+        vendor/aokp/build/tools/roomservice.py -d ${product#*_}
         cd - > /dev/null
     fi
 
