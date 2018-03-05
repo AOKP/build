@@ -187,6 +187,11 @@ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 # be device and hardware independent.
 $(call project-set-path-variant,recovery,RECOVERY_VARIANT,bootable/recovery)
 
+ifeq ($(AOKP_BUILD),)
+# AOSP targets should use AOSP RIL
+$(call project-set-path,ril,hardware/ril)
+endif
+
 -include vendor/extra/BoardConfigExtra.mk
 -include vendor/aokp/configs/BoardConfig.mk
 
