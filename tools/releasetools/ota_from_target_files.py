@@ -623,14 +623,13 @@ def WriteMetadata(metadata, output_zip):
   common.ZipWriteStr(output_zip, METADATA_NAME, value,
                      compress_type=zipfile.ZIP_STORED)
 
-
 def GetBuildProp(prop, info_dict):
   """Return the fingerprint of the build of a given target-files info_dict."""
   try:
     return info_dict.get("build.prop", {})[prop]
   except KeyError:
-    raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
-
+    print ("WARNING: could not find %s in build.prop" % (prop,))
+    return None
 
 def HandleDowngradeMetadata(metadata):
   # Only incremental OTAs are allowed to reach here.
