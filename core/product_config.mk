@@ -171,6 +171,7 @@ include $(BUILD_SYSTEM)/device.mk
 # An AOKP build needs only the AOKP product makefiles.
 ifneq ($(AOKP_BUILD),)
   all_product_configs := $(shell find device -path "*/$(AOKP_BUILD)/aokp.mk")
+  all_product_configs += $(wildcard vendor/aokp/build/target/product/aokp_$(AOKP_BUILD).mk)
 else
   ifneq ($(strip $(TARGET_BUILD_APPS)),)
   # An unbundled app build needs only the core product makefiles.
