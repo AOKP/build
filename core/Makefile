@@ -992,6 +992,19 @@ ifeq ($(ONE_SHOT_MAKEFILE),)
 endif
 endif  # TARGET_BUILD_APPS
 
+# Generate changelog
+target_changelog := $(TARGET_OUT_INTERMEDIATES)/changelog.txt
+installed_changelog := $(TARGET_OUT)/etc/changelog.txt
+
+$(target_changelog):
+	vendor/aokp/tools/changelog $@
+$(installed_changelog): $(target_changelog)
+	$(copy-file-to-target)
+
+ifeq ($(ONE_SHOT_MAKEFILE),)
+  ALL_DEFAULT_INSTALLED_MODULES += $(installed_changelog)
+endif
+
 # The kernel isn't really a module, so to get its module file in there, we
 # make the target NOTICE files depend on this particular file too, which will
 # then be in the right directory for the find in combine-notice-files to work.
