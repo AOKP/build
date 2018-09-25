@@ -847,7 +847,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.Print("*                         http://aokp.co *");
   script.Print("******************************************");
 
-  aokpv = GetBuildProp("ro.aokp.version", OPTIONS.info_dict)
+  aokpv = target_info.GetBuildProp("ro.aokp.version")
   if os.getenv("AOKP_BUILD") is not None:
     build = ' '.join(aokpv.split('_')[3].split('-')).title()
     script.Print("*   Version: %s"%(build));
@@ -855,15 +855,15 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     build = ' '.join(aokpv.split('_')[2:]).title()
     script.Print("*   Version: %s"%(build));
   else:
-    build = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+    build = target_info.GetBuildProp("ro.build.date")
     script.Print("******************************************");
     script.Print("************ UNOFFICIAL BUILD ************");
     script.Print("******************************************");
     script.Print("*   Compiled: %s"%(build));
 
-  device = GetBuildProp("ro.aokp.device", OPTIONS.info_dict)
-  brand = GetBuildProp("ro.product.brand", OPTIONS.info_dict)
-  name = GetBuildProp("ro.product.name", OPTIONS.info_dict)
+  device = target_info.GetBuildProp("ro.aokp.device")
+  brand = target_info.GetBuildProp("ro.product.brand")
+  name = target_info.GetBuildProp("ro.product.name")
   script.Print("*   Device: %s %s (%s)"%(brand, name, device));
   script.Print("******************************************");
 
