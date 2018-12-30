@@ -1,5 +1,17 @@
 # Put some miscellaneous rules here
 
+# Build system colors
+
+ifneq ($(BUILD_WITH_COLORS),0)
+  CL_RED="\033[31m"
+  CL_GRN="\033[32m"
+  CL_YLW="\033[33m"
+  CL_BLU="\033[34m"
+  CL_MAG="\033[35m"
+  CL_CYN="\033[36m"
+  CL_RST="\033[0m"
+endif
+
 # HACK: clear LOCAL_PATH from including last build target before calling
 # intermedites-dir-for
 LOCAL_PATH := $(BUILD_SYSTEM)
@@ -3173,7 +3185,7 @@ else
 endif
 endif
 
-$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) 
+$(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	@echo "$(OTA_FROM_TARGET_SCRIPT)" > $(PRODUCT_OUT)/ota_script_path
 	@echo "Package OTA: $@"
 	$(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$$PATH MKBOOTIMG=$(MKBOOTIMG) \
@@ -3197,21 +3209,21 @@ bacon: otapackage
 	$(hide) $(MD5SUM) $(AOKP_TARGET_PACKAGE) > $(AOKP_TARGET_PACKAGE).md5sum
 rainbowfarts: bacon
 	@echo -e ""
-	@echo -e "============================================================================"
-	@echo -e "                    ______""  _____""   __  __""   _____"
-	@echo -e "                   /\\\\  _  \\\\""/\\\\  __\`\\\\""/\\\\ \\\\/\\\\ \\\\"" /\\\\  _ \`\\\\"
-	@echo -e "                   \\\\ \\\\ \\\\L\\\\ \\\\"" \\\\ \\\\/\\\\ \\\\"" \\\\ \\\\/'/'""\\\\ \\\\ \\\\L\\\\ \\\\"
-	@echo -e "                    \\\\ \\\\  __ \\\\"" \\\\ \\\\ \\\\ \\\\"" \\\\ , <""  \\\\ \\\\ ,__/"
-	@echo -e "                     \\\\ \\\\ \\\\/\\\\ \\\\"" \\\\ \\\\_\\\\ \\\\"" \\\\ \\\\\\\\\`\\\\"" \\\\ \\\\ \\\\/"
-	@echo -e "                      \\\\ \\\\_\\\\ \\\\_\\\\"" \\\\_____\\\\"" \\\\_\\\\ \\\\_\\\\""\\\\ \\\\_\\\\"
-	@echo -e "                       \\\\/_/\\\\/_/""\\\\/_____/""\\\\/_/\\\\/_/"" \\\\/_/"
+	@echo -e ${CL_CYN}"============================================================================"${CL_RST}
+	@echo -e ${CL_RED}"                    ______"${CL_MAG}"  _____"${CL_CYN}"   __  __"${CL_BLU}"   _____"${CL_RST}
+	@echo -e ${CL_RED}"                   /\\\\  _  \\\\"${CL_MAG}"/\\\\  __\`\\\\"${CL_CYN}"/\\\\ \\\\/\\\\ \\\\"${CL_BLU}" /\\\\  _ \`\\\\"${CL_RST}
+	@echo -e ${CL_RED}"                   \\\\ \\\\ \\\\L\\\\ \\\\"${CL_MAG}" \\\\ \\\\/\\\\ \\\\"${CL_CYN}" \\\\ \\\\/'/'"${CL_BLU}"\\\\ \\\\ \\\\L\\\\ \\\\"${CL_RST}
+	@echo -e ${CL_RED}"                    \\\\ \\\\  __ \\\\"${CL_MAG}" \\\\ \\\\ \\\\ \\\\"${CL_CYN}" \\\\ , <"${CL_BLU}"  \\\\ \\\\ ,__/"${CL_RST}
+	@echo -e ${CL_RED}"                     \\\\ \\\\ \\\\/\\\\ \\\\"${CL_MAG}" \\\\ \\\\_\\\\ \\\\"${CL_CYN}" \\\\ \\\\\\\\\`\\\\"${CL_BLU}" \\\\ \\\\ \\\\/"${CL_RST}
+	@echo -e ${CL_RED}"                      \\\\ \\\\_\\\\ \\\\_\\\\"${CL_MAG}" \\\\_____\\\\"${CL_CYN}" \\\\_\\\\ \\\\_\\\\"${CL_BLU}"\\\\ \\\\_\\\\"${CL_RST}
+	@echo -e ${CL_RED}"                       \\\\/_/\\\\/_/"${CL_MAG}"\\\\/_____/"${CL_CYN}"\\\\/_/\\\\/_/"${CL_BLU}" \\\\/_/"${CL_RST}
 	@echo -e ""
-	@echo -e "=============================-Package complete-============================="
-	@echo -e "Folder : " $(AOKP_TARGET_PACKAGE_FOLDER)
-	@echo -e "ZipName: "$(subst $(AOKP_TARGET_PACKAGE_FOLDER)/,,$(AOKP_TARGET_PACKAGE))$
-	@echo -e "MD5    : "" $(shell cat $(AOKP_TARGET_PACKAGE).md5sum | awk '{print $$1}')"
-	@echo -e "Size   : "" $(shell du -hs $(AOKP_TARGET_PACKAGE) | awk '{print $$1}')"
-	@echo -e "============================================================================"
+	@echo -e ${CL_CYN}"=============================-Package complete-============================="${CL_RST}
+	@echo -e ${CL_CYN}"Folder : "${CL_MAG} $(AOKP_TARGET_PACKAGE_FOLDER)${CL_RST}
+	@echo -e ${CL_CYN}"ZipName: "${CL_MAG} $(subst $(AOKP_TARGET_PACKAGE_FOLDER)/,,$(AOKP_TARGET_PACKAGE))${CL_RST}
+	@echo -e ${CL_CYN}"MD5    : "${CL_MAG}" $(shell cat $(AOKP_TARGET_PACKAGE).md5sum | awk '{print $$1}')"${CL_RST}
+	@echo -e ${CL_CYN}"Size   : "${CL_MAG}" $(shell du -hs $(AOKP_TARGET_PACKAGE) | awk '{print $$1}')"${CL_RST}
+	@echo -e ${CL_CYN}"============================================================================"${CL_RST}
 	@echo -e ""
 
 endif    # build_ota_package
